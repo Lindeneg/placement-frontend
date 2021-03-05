@@ -6,7 +6,7 @@ import { User } from '../../../common/types';
 interface UsersProps extends BaseProps {};
 
 
-const USERS: User[] = [
+const DUMMY_DATA: User[] = [
     {
         id: 'u1',
         name: 'miles',
@@ -28,7 +28,7 @@ const USERS: User[] = [
 
 const Users: Functional<UsersProps> = props => (
     <UsersList 
-        users={USERS}
+        users={DUMMY_DATA}
     />
 );
 
