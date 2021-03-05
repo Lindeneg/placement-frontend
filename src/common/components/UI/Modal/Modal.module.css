@@ -9,42 +9,42 @@
     border-radius: 8px;
 }
 
-.ModalHeader {
+.Header {
     width: 100%;
     padding: 1rem 0.5rem;
     background: #2a006e;
     color: white;
 }
 
-.ModalHeader h2 {
+.Header h2 {
     margin: 0.5rem;
 }
 
-.ModalContent {
+.Content {
     padding: 1rem 0.5rem;
 }
 
-.ModalFooter {
+.Footer {
     padding: 1rem 0.5rem;
 }
 
-.ModalEnter {
+.Enter {
     transform: translateY(-10rem);
     opacity: 0;
 }
 
-.ModalEnterActive {
+.EnterActive {
     transform: translateY(0);
     opacity: 1;
     transition: all 200ms;
 }
 
-.ModalExit {
+.Exit {
     transform: translateY(0);
     opacity: 1;
 }
 
-.ModalExitActive {
+.ExitActive {
     transform: translateY(-10rem);
     opacity: 0;
     transition: all 200ms;

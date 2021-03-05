@@ -5,35 +5,47 @@ import React from "react";
  ****** GENERICS  *****
  **********************/
 
-export type Reducer<
-    S = {}, 
-    A = Action<AnyAction>
-> = (state: S, action: A) => S; 
+export type Reducer <
+    S = {},
+    A = Action < AnyAction > 
+>
+    = (state: S, action: A) => S;
 
-export type OnClickFunc<
+export type OnClickFunc <
+    T = HTMLElement 
+>
+    = React.MouseEventHandler < T > ;
+
+export type OnSubmitFunc <
+    T = HTMLFormElement 
+>
+    = React.FormEventHandler < T > ;
+
+export type OnChange <
     T = HTMLElement
-> = React.MouseEventHandler<T>;
+>
+    = React.ChangeEventHandler < T > ;
 
-export type OnSubmitFunc<
-    T = HTMLFormElement
-> = React.FormEventHandler<T>;
+export type OnBlur <
+    T = HTMLElement
+>
+    = React.FocusEventHandler < T > ;
 
-export type OnChange<
-    T
-> = React.ChangeEventHandler<T>;
+export type RMutRef <
+    T 
+>
+    = React.MutableRefObject < T | null > ;
 
-export type RMutRef<
-    T
-> = React.MutableRefObject<T | null>;
-
-export type SetDispatchAction<
-    S
-> = React.Dispatch<React.SetStateAction<S>>;
+export type SetDispatchAction <
+    S 
+>
+    = React.Dispatch < React.SetStateAction < S >> ;
 
 export type ReducerDispatch <
     A,
-    P = {}
-> = React.Dispatch<Action<A, P>>;
+    P = {} 
+>
+    = React.Dispatch < Action < A, P >> ;
 
 /**********************
  ****** UTILITY  ******
@@ -48,66 +60,79 @@ export interface Location {
     lng: number
 };
 
+export interface NIndexable < T > {
+    [key: number]: T
+};
+
 /**********************
  ****** PROPS  ********
  **********************/
 
 export interface BaseProps {
-    children?: React.ReactNode,
-    style   ?: React.CSSProperties
+    children  ? : React.ReactNode,
+    style     ? : React.CSSProperties
 };
 
 export interface OptCls {
-    className?: string
+    className ? : string
 };
 
 export interface Visibility {
     show: boolean
 };
 
-export interface Clickable<T = HTMLElement> {
-    onClick: OnClickFunc<T>
+export interface Clickable < T = HTMLElement > {
+    onClick: OnClickFunc < T >
 };
 
 /**********************
  **** STATE TUPLE  ****
  **********************/
 
-export type UseStateTuple<
-    S
-> = [S, SetDispatchAction<S>];
+export type UseStateTuple <
+    S = {}
+>
+    = [S, SetDispatchAction < S > ];
 
-export type UseReducerTuple<
-    S = {}, 
-    A = AnyAction, 
-    P = {}
-> = [S, ReducerDispatch<A, P>];
+export type UseReducerTuple <
+    S = {},
+    A = AnyAction,
+    P = {} 
+>
+    = [S, ReducerDispatch < A, P > ];
 
 /**********************
  ****  FUNCTIONAL  ****
  **********************/
 
-export type Functional <P = BaseProps, R = JSX.Element> = (props: P) => R | null;
-export type Portal     <P = BaseProps>                  = Functional<P, React.ReactPortal>;
+export type Functional < 
+    P = BaseProps, 
+    R = JSX.Element 
+> 
+    = (props: P) => R | null;
 
+export type Portal < 
+    P = BaseProps 
+> 
+    = Functional < P, React.ReactPortal > ;
 
 /**********************
  ***  CORE STRUCTS  ***
  **********************/
 
 export interface User extends Identifiable {
-    image   : string,
-    name    : string,
-    placeQty: number
+    image      : string,
+    name       : string,
+    placeQty   : number
 };
 
 export interface Place extends Identifiable {
-    creatorId: string,
-    title: string,
+    creatorId  : string,
+    title      : string,
     description: string,
-    image: string,
-    address: string,
-    location: Location
+    image      : string,
+    address    : string,
+    location   : Location
 };
 
 /**********************
@@ -122,25 +147,37 @@ export interface UserPlacesParams {
  ****** ACTIONS  ******
  **********************/
 
- export interface Action<T, P = {}> {
-     type: T,
-     payload?: P
- };
-
-export interface AnyAction extends Action<'any-action'> {};
-
-/*
-
-export function actionFunc<T, P>(type: T, payload: P): PlacementAction<T, P> {
-    return { type, payload }
+export interface Action < T, P = {} > {
+    type         : T,
+    payload    ? : P,
+    validators ? : Validator[] 
 };
 
-interface PlacementAction<T, P = {}> extends Action<T> {
-    type: T,
-    payload?: P
+export interface AnyAction extends Action < 'any-action' > {};
+
+/**********************
+ ***** VALIDATION  ****
+ **********************/
+
+export enum ValidationType {
+    Require,
+    MinLength,
+    MaxLength,
+    MinValue,
+    MaxValue,
+    Email,
+    File
 };
 
-type MapStateToProps<P> = (state: BaseState) => P;
+export type ValidationValue = string | number;
 
-type MapDispatchToProps<S, A, P> = (dispatch: ThunkDispatch<S, unknown, PlacementAction<A>>) => P;
-*/
+export interface Validator {
+    type     : ValidationType,
+    value  ? : number
+};
+
+export type ValidationFunc = (
+    value    : ValidationValue, 
+    isValid  : boolean, 
+    validator: Validator
+) => boolean;

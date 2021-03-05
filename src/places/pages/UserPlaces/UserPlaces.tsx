@@ -1,13 +1,19 @@
 import { useParams } from 'react-router-dom'
 
 import PlaceList from '../../components/PlaceList/PlaceList';
-import { BaseProps, Functional, Place, UserPlacesParams } from "../../../common/types";
+import { 
+    BaseProps, 
+    Functional, 
+    Place, 
+    UserPlacesParams 
+} from "../../../common/types";
+
 
 interface UserPlacesProps extends BaseProps {
 
 };
 
-const PLACES: Place[] = [
+const DUMMY_DATA: Place[] = [
     {
         id: 'p1',
         creatorId: 'u1',
@@ -29,15 +35,20 @@ const PLACES: Place[] = [
 ];
 
 
+/**
+ * Component with list of Places tied to a given User.
+ */
+
 const UserPlaces: Functional<UserPlacesProps> = props => {
 
     const param = useParams<UserPlacesParams>();
-    const loadedPlaces = PLACES.filter((e: Place): boolean => e.creatorId === param.userId);
+    const loadedPlaces = DUMMY_DATA.filter((e: Place): boolean => e.creatorId === param.userId);
     return (
         <PlaceList 
             places={loadedPlaces}
         />
     )
 };
+
 
 export default UserPlaces;

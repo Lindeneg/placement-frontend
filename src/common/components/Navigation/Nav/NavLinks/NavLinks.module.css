@@ -1,4 +1,4 @@
-.NavLinks { /* nav-links */
+.Link {
     list-style: none;
     margin: 0;
     padding: 0;
@@ -10,11 +10,11 @@
     align-items: center;
 }
 
-.NavLinks li {
+.Link li {
     margin: 1rem;
 }
 
-.NavLinks a {
+.Link a {
     border: 1px solid transparent;
     color: #292929;
     text-decoration: none;
@@ -27,7 +27,7 @@
     color: #292929 !important;
 }
 
-.NavLinks button {
+.Link button {
     cursor: pointer;
     border: 1px solid #292929;
     color: #292929;
@@ -36,38 +36,38 @@
     font: inherit;
 }
 
-.NavLinks button:focus {
+.Link button:focus {
     outline: none;
 }
 
-.NavLinks button:hover,
-.NavLinks button:active {
+.Link button:hover,
+.Link button:active {
     background: #292929;
     color: white;
 }
 
 @media (min-width: 768px) {
-    .NavLinks {
+    .Link {
         flex-direction: row;
     }
 
-    .NavLinks li {
+    .Link li {
         margin: 0 0.5rem;
     }
 
-    .NavLinks a {
+    .Link a {
         color: white;
         text-decoration: none;
     }
 
-    .NavLinks button {
+    .Link button {
         border: 1px solid white;
         color: white;
         background: transparent;
     }
 
-    .NavLinks button:hover,
-    .NavLinks button:active {
+    .Link button:hover,
+    .Link button:active {
         background: #f8df00;
         color: #292929;
     }

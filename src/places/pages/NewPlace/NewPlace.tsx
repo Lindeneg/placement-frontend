@@ -1,15 +1,35 @@
 import Input from '../../../common/components/Interaction/Input/Input';
-import { BaseProps, Functional } from "../../../common/types";
+import { getValidator } from '../../../common/util/validators';
+import { 
+    BaseProps, 
+    Functional, 
+    ValidationType 
+} from "../../../common/types";
 import classes from './NewPlace.module.css';
+
 
 interface NewPlacesProps extends BaseProps {
 
 };
 
-const NewPlaces: Functional<NewPlacesProps> = props => (
+
+/**
+ * Component for creating a new Place structure.
+ */
+
+const NewPlace: Functional<NewPlacesProps> = props => (
     <div className={classes.Form}>
-        <Input type='text' label='Title' element='input' errorText='Please Enter Valid Title' />
+        <Input 
+            type='text' 
+            label='Title' 
+            element='input' 
+            errorText='Please enter a valid Title' 
+            validators={[
+                getValidator(ValidationType.Require)
+            ]}
+        />
     </div>
 );
 
-export default NewPlaces;
+
+export default NewPlace;

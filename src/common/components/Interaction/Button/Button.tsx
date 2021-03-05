@@ -5,18 +5,14 @@ import classes from './Button.module.css';
 
 
 interface ButtonProps extends BaseProps {
-    anchor?: {
-        href: string
-    },
-    link?: {
-        to: string
-    },
-    type?: 'button' | 'submit' | 'reset',
-    size?: 'small' | 'big',
-    onClick?: OnClickFunc,
-    disabled?: boolean
-    inverse?: boolean,
-    danger?: boolean
+    anchor   ? : { href: string },
+    link     ? : { to  : string },
+    type     ? : 'button' | 'submit' | 'reset',
+    size     ? : 'small' | 'big',
+    onClick  ? : OnClickFunc,
+    disabled ? : boolean
+    inverse  ? : boolean,
+    danger   ? : boolean
 };
 
 

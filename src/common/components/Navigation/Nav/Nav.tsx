@@ -9,6 +9,10 @@ import { Functional, UseStateTuple } from "../../../types";
 import classes from './Nav.module.css';
 
 
+/**
+ * Main navigational component handing both desktop and mobile.
+ */
+
 const Nav: Functional = props => {
 
     const [drawerIsOpen, setDrawerIsOpen]: UseStateTuple<boolean> = useState<boolean>(false);
@@ -25,17 +29,17 @@ const Nav: Functional = props => {
         <Fragment>
             {drawerIsOpen &&  <Backdrop onClick={handleOnCloseDrawer} />}
             <SideDrawer show={drawerIsOpen} onClick={handleOnCloseDrawer} >
-                <nav className={classes.NavDrawer}>
+                <nav className={classes.Drawer}>
                     <NavLinks />
                 </nav>
             </SideDrawer>
             <Header>
-                <button className={classes.NavMenuBtn} onClick={handleOnOpenDrawer}>
+                <button className={classes.Btn} onClick={handleOnOpenDrawer}>
                     <span />
                     <span />
                     <span />
                 </button>
-                <h1 className={classes.NavTitle}>
+                <h1 className={classes.Title}>
                     <Link to='/'>Placement</Link>
                 </h1>
                 <nav className={classes.Nav}>
@@ -45,5 +49,6 @@ const Nav: Functional = props => {
         </Fragment>
     )
 };
+
 
 export default Nav;

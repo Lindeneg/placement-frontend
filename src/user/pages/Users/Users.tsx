@@ -3,9 +3,8 @@ import { BaseProps, Functional } from "../../../common/types";
 import { User } from '../../../common/types';
 
 
-interface UsersProps extends BaseProps {
+interface UsersProps extends BaseProps {};
 
-};
 
 const USERS: User[] = [
     {
@@ -22,10 +21,16 @@ const USERS: User[] = [
     }
 ];
 
+
+/**
+ * Component with list of Users to be utilized in a UsersList.
+ */
+
 const Users: Functional<UsersProps> = props => (
     <UsersList 
         users={USERS}
     />
 );
+
 
 export default Users;

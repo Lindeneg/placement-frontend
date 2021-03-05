@@ -1,6 +1,9 @@
 import UserListItem from './UserListItem/UserListItem';
 import Card from '../../../common/components/UI/Card/Card';
-import { BaseProps, Functional } from "../../../common/types";
+import { 
+    BaseProps, 
+    Functional 
+} from "../../../common/types";
 import { User } from "../../../common/types";
 import classes from './UsersList.module.css';
 
@@ -8,6 +11,11 @@ import classes from './UsersList.module.css';
 interface UserListProps extends BaseProps {
     users: User[]
 };
+
+
+/**
+ * Component that displays a list with all fetched Users.
+ */
 
 const UsersList: Functional<UserListProps> = props => {
     if (!(props.users.length > 0)) {
@@ -20,12 +28,13 @@ const UsersList: Functional<UserListProps> = props => {
         );
     }
     return (
-        <ul className={classes.UsersList}>
+        <ul className={classes.List}>
             {props.users.map((user: User): JSX.Element => (
                 <UserListItem key={user.id} {...user} />
             ))}
         </ul>
     );
 };
+
 
 export default UsersList;

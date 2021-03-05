@@ -9,10 +9,14 @@ interface PlaceListProps extends BaseProps {
 };
 
 
+/**
+ * Component with list of Places.
+ */
+
 const PlaceList: Functional<PlaceListProps> = props => {
     if (!(props.places.length > 0)) {
         return (
-            <div className={[classes.PlaceList, 'center'].join(' ')}>
+            <div className={[classes.List, 'center'].join(' ')}>
                 <Card>
                     <h2>No places found. Go ahead and create one!</h2>
                     <button>Share Place</button>
@@ -21,7 +25,7 @@ const PlaceList: Functional<PlaceListProps> = props => {
         )
     }
     return (
-        <ul className={classes.PlaceList} >
+        <ul className={classes.List} >
             {props.places.map((place: Place): JSX.Element => (
                 <PlaceListItem key={place.id} {...place} />
             ))}

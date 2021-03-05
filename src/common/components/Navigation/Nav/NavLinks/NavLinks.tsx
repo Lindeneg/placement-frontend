@@ -4,8 +4,12 @@ import { Functional } from "../../../../types";
 import classes from './NavLinks.module.css';
 
 
+/**
+ * Base component for navigational routing links.
+ */
+
 const NavLinks: Functional = props => (
-    <ul className={classes.NavLinks}>
+    <ul className={classes.Link}>
         <li>
             <NavLink activeClassName={classes.Active} to='/' exact>ALL USERS</NavLink>
         </li>

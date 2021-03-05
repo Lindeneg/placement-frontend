@@ -1,4 +1,4 @@
-.SideDrawer {
+.Drawer {
   position: fixed;
   left: 0;
   top: 0;
@@ -10,22 +10,22 @@
 }
 
 
-.SlideInLeftEnter {
+.Enter {
   transform: translateX(-100%);
 }
 
-.SlideInLeftEnterActive {
+.EnterActive {
   opacity: 1;
   transform: translateX(0%);
   transition: all 200ms;
 }
 
-.SlideInLeftExit {
+.Exit {
   transform: translateX(0%);
   opacity: 1;
 }
 
-.SlideInLeftExitActive {
+.ExitActive {
   transform: translateX(-100%);
   opacity: 0;
   transition: all 200ms;

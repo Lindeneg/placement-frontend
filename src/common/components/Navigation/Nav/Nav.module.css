@@ -1,4 +1,4 @@
-.NavMenuBtn { /* main-navigation__menu-btn */
+.Btn {
   width: 3rem;
   height: 3rem;
   background: transparent;
@@ -10,32 +10,32 @@
   cursor: pointer;
 }
 
-.NavMenuBtn span {
+.Btn span {
   display: block;
   width: 3rem;
   height: 2.5px;
   background: white;
 }
 
-.NavTitle { /* main-navigation__title */
+.Title {
   color: white;
 }
 
-.NavTitle a {
+.Title a {
   text-decoration: none;
   color: white;
 }
 
-.Nav { /* main-navigation__header-nav */
+.Nav {
   display: none;
 }
 
-.NavDrawer { /* main-navigation__drawer-nav */
+.Drawer {
   height: 100%;
 }
 
 @media (min-width: 768px) {
-  .NavMenuBtn {
+  .Btn {
     display: none;
   }
 
