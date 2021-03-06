@@ -18,10 +18,11 @@ const validationFunc: NIndexable<ValidationFunc> = {
         return isValid && +value <= (validator.value || 10);
     },
     [ValidationType.Email]: (value, isValid, validator) => {
-        return isValid && /^\S+@\S+\.\S+$/.test(value.toString()); // TODO redo regexp
+        return isValid && /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(value.toString());
     },
     [ValidationType.File]: (value, isValid, validator) => {
         return isValid; // TODO
+        
     },
 };
 
@@ -31,9 +32,11 @@ export const getValidator = (type: ValidationType, value?: number): Validator =>
 
 export const validate = (value: ValidationValue, validators: Validator[]): boolean => {
     let isValid: boolean = true;
-    for (let i = 0; i < validators.length; i++) {
-        const validator = validators[i];
-        isValid = validationFunc[validator.type](value, isValid, validator);
-    }
+    validators.forEach(validator => {
+        const func: ValidationFunc | undefined = validationFunc[validator.type];
+        if (typeof func !== 'undefined') {
+            isValid = func(value || '', isValid, validator);
+        }
+    });
     return isValid;
 };
