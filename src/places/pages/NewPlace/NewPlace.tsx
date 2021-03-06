@@ -12,7 +12,8 @@ import {
     ValidationType, 
     ValidationValue,
     Identifiable,
-    SIndexable
+    SIndexable,
+    OnSubmitFunc
 } from "../../../common/types";
 import classes from './NewPlace.module.css';
 
@@ -24,10 +25,7 @@ interface NewPlaceStateMetaEntry extends SIndexable<ValidationValue | boolean> {
     isValid: boolean
 };
 
-interface NewPlaceStateEntry extends SIndexable<NewPlaceStateMetaEntry> {
-    title: NewPlaceStateMetaEntry,
-    description: NewPlaceStateMetaEntry
-};
+interface NewPlaceStateEntry extends SIndexable<NewPlaceStateMetaEntry> {};
 
 export interface NewPlaceState extends SIndexable<NewPlaceStateEntry | boolean> {
     inputs: NewPlaceStateEntry,
@@ -60,8 +58,13 @@ const NewPlace: Functional<NewPlaceProps> = props => {
         }});
     }, []);
 
+    const onSubmitHandler: OnSubmitFunc = event => {
+        event.preventDefault();
+        console.log(state.inputs);  
+    };
+
     return (
-        <form className={classes.Form}>
+        <form className={classes.Form} onSubmit={onSubmitHandler}>
             <Input 
                 id='title'
                 onInput={inputHandler}
@@ -85,15 +88,24 @@ const NewPlace: Functional<NewPlaceProps> = props => {
                     getValidator(ValidationType.MaxLength, 128)
                 ]}
             />
+            <Input 
+                id='address'
+                onInput={inputHandler}
+                type='text' 
+                label='Address' 
+                element='input' 
+                errorText='Please enter a valid address' 
+                validators={[getValidator(ValidationType.Require)]}
+            />
             <Button 
                 type='submit'
                 disabled={!state.isValid}
             >
-                Submit
+                Add Place
             </Button>
         </form>
     )
-}
+};
 
 
 export default NewPlace;
