@@ -1,18 +1,16 @@
-import { InputAction } from "./action";
+import InputAction from "./actions";
 import { InputState, InputPayload } from './Input';
 import { validate } from '../../../util/validators';
-import { Action, Reducer, Validator, ValidationValue } from "../../../types";
+import { Action, Reducer,  } from "../../../types";
 
 
 const reducer: Reducer<InputState, Action<InputAction, InputPayload>> = (state, action) => {
-    const validators: Validator[]     = action.validators || [];
-    const value     : ValidationValue = action.payload?.value || '';
     switch(action.type) {
         case InputAction.CHANGE:
             return {
                 ...state,
-                value,
-                isValid: validate(value, validators)
+                value: action.payload?.value,
+                isValid: validate(action.payload?.value, action.validators || [])
             };
         case InputAction.TOUCH:
             return {
