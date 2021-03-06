@@ -18,6 +18,7 @@ const validationFunc: NIndexable<ValidationFunc> = {
         return isValid && +value <= (validator.value || 10);
     },
     [ValidationType.Email]: (value, isValid, validator) => {
+        // the exp is intended to be used in a .exec call to extract the groups
         return isValid && /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(value.toString());
     },
     [ValidationType.File]: (value, isValid, validator) => {
