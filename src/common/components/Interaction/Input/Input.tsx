@@ -1,7 +1,7 @@
-import { useReducer } from 'react';
+import { useReducer, useEffect } from 'react';
 
 import inputReducer from './reducer';
-import { InputAction } from './action';
+import InputAction from './actions';
 import { 
     BaseProps, 
     Functional, 
@@ -16,13 +16,14 @@ import classes from './Input.module.css';
 
 
 interface InputProps extends BaseProps, Partial<Identifiable> {
+    onInput       : (...args: any[]) => void
     element       : 'input' | 'text-area',
     type        ? : 'text' | 'number',
     label       ? : string,
     errorText   ? : string,
     placeHolder ? : string,
     rows        ? : number,
-    validators  ? : Validator[]
+    validators  ? : Validator[],
 };
 
 export interface InputState {
@@ -56,8 +57,15 @@ const Input: Functional<InputProps> = props => {
     };
 
     const onTouchHandler: OnBlur<HTMLInputElement | HTMLTextAreaElement> = event => {
-        dispatch({ type: InputAction.TOUCH });
+        dispatch({ type: InputAction.TOUCH, payload: {} });
     };
+
+    const { id, onInput }    = props;
+    const { value, isValid } = state;
+
+    useEffect(() => {
+        onInput(id, value, isValid);
+    }, [id, onInput, value, isValid]);
 
     let element: JSX.Element;
     switch (props.element) {
@@ -90,11 +98,11 @@ const Input: Functional<InputProps> = props => {
     }
 
     return (
-        <form className={[classes.Control, !state.isValid && state.isTouched && classes.Invalid].join(' ')}>
+        <div className={[classes.Control, !state.isValid && state.isTouched && classes.Invalid].join(' ')}>
             <label htmlFor={props.id}>{props.label}</label>
             {element}
             {!state.isValid && state.isTouched && <p>{props.errorText}</p>}
-        </form>
+        </div>
     )
 };
 
