@@ -64,6 +64,10 @@ export interface NIndexable < T > {
     [key: number]: T
 };
 
+export interface SIndexable < T > {
+    [key: string]: T
+};
+
 /**********************
  ****** PROPS  ********
  **********************/
@@ -149,7 +153,7 @@ export interface UserPlacesParams {
 
 export interface Action < T, P = {} > {
     type         : T,
-    payload    ? : P,
+    payload      : P,
     validators ? : Validator[] 
 };
 
@@ -169,7 +173,7 @@ export enum ValidationType {
     File
 };
 
-export type ValidationValue = string | number;
+export type ValidationValue = string | number | undefined;
 
 export interface Validator {
     type     : ValidationType,
@@ -177,7 +181,7 @@ export interface Validator {
 };
 
 export type ValidationFunc = (
-    value    : ValidationValue, 
+    value    : string | number, 
     isValid  : boolean, 
     validator: Validator
 ) => boolean;
