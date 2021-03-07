@@ -1,6 +1,7 @@
-import { Fragment, useState } from 'react';
+import { Fragment, useState, useContext } from 'react';
 
 import Modal from '../../../../common/components/UI/Modal/Modal';
+import AuthContext from '../../../../common/context/auth';
 import Map from '../../../../common/components/UI/Map/Map';
 import Button from '../../../../common/components/Interaction/Button/Button';
 import Card from '../../../../common/components/UI/Card/Card';
@@ -22,7 +23,8 @@ interface PlaceListItemProps extends BaseProps, Place {};
 
 const PlaceListItem: Functional<PlaceListItemProps> = props => {
 
-    const [showMap, setShowMap]: UseStateTuple<boolean> = useState<boolean>(false);
+    const authContext                                                   = useContext(AuthContext);
+    const [showMap, setShowMap]: UseStateTuple<boolean>                 = useState<boolean>(false);
     const [showDeleteConfirm, setDeleteConfirm]: UseStateTuple<boolean> = useState<boolean>(false);
 
     const onOpenMapHandler = () => {
@@ -90,9 +92,8 @@ const PlaceListItem: Functional<PlaceListItemProps> = props => {
                     <div className={classes.Actions} >
                         <Button onClick={onOpenMapHandler} inverse>VIEW ON MAP</Button>
 
-                        <Button link={{to: `places/${props.id}`}}>EDIT</Button>
-
-                        <Button danger onClick={onOpenDeleteConfirmHandler}>DELETE</Button>
+                        {authContext.isLoggedIn && <Button link={{to: `/places/${props.id}`}}>EDIT</Button>}
+                        {authContext.isLoggedIn && <Button danger onClick={onOpenDeleteConfirmHandler}>DELETE</Button>}
                     </div>
                 </Card>
             </li>
