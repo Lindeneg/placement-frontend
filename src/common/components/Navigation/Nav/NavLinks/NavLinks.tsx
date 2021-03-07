@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import { NavLink } from 'react-router-dom';
 
+import Button from '../../../Interaction/Button/Button';
 import AuthContext from '../../../../context/auth';
 import { Functional } from "../../../../types";
 import classes from './NavLinks.module.css';
@@ -26,7 +27,10 @@ const NavLinks: Functional = props => {
                 <NavLink activeClassName={classes.Active} to='/places/new'>ADD PLACE</NavLink>
             </li>}
             {!authContext.isLoggedIn && <li>
-                <NavLink activeClassName={classes.Active} to='/auth'>LOGIN</NavLink>
+                <NavLink activeClassName={classes.Active} to='/auth'>LOGIN/SIGNUP</NavLink>
+            </li>}
+            {authContext.isLoggedIn && <li>
+                <Button inverse onClick={authContext.logout} >LOGOUT</Button>
             </li>}
         </ul>
     )

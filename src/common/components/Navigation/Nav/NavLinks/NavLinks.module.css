@@ -27,25 +27,6 @@
     color: rgb(17, 18, 21) !important;
 }
 
-.Link button {
-    cursor: pointer;
-    border: 1px solid #292929;
-    color: #292929;
-    background: transparent;
-    padding: 0.5rem;
-    font: inherit;
-}
-
-.Link button:focus {
-    outline: none;
-}
-
-.Link button:hover,
-.Link button:active {
-    background: #292929;
-    color: white;
-}
-
 @media (min-width: 768px) {
     .Link {
         flex-direction: row;
@@ -58,17 +39,5 @@
     .Link a {
         color: white;
         text-decoration: none;
-    }
-
-    .Link button {
-        border: 1px solid white;
-        color: white;
-        background: transparent;
-    }
-
-    .Link button:hover,
-    .Link button:active {
-        background: #f8df00;
-        color: #292929;
     }
 }
