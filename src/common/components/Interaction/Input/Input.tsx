@@ -18,7 +18,7 @@ import classes from './Input.module.css';
 interface InputProps extends BaseProps, Partial<Identifiable> {
     onInput       : (...args: any[]) => void
     element       : 'input' | 'text-area',
-    type        ? : 'text' | 'number' | 'email',
+    type        ? : 'text' | 'number' | 'email' | 'password',
     value       ? : string | number,
     label       ? : string,
     errorText   ? : string,
