@@ -10,7 +10,7 @@ interface CardProps extends BaseProps, OptCls {};
  */
 
 const Card: Functional<CardProps> = props => (
-    <div className={[classes.Card, props.className].join(' ')}>
+    <div className={[classes.Card, props.className].join(' ')} style={props.style}>
         {props.children}
     </div>
 );

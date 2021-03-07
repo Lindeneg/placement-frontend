@@ -7,6 +7,8 @@ import {
 
 import Nav from './common/components/Navigation/Nav/Nav';
 import Users from './user/pages/Users/Users';
+import Auth from './user/pages/Auth/Auth';
+import UpdatePlace from './places/pages/UpdatePlace/UpdatePlace';
 import UserPlaces from './places/pages/UserPlaces/UserPlaces';
 import NewPlace from './places/pages/NewPlace/NewPlace';
 import { Functional } from "./common/types";
@@ -26,6 +28,12 @@ const App: Functional = () => (
         </Route>
         <Route path='/places/new' exact> 
           <NewPlace />
+        </Route>
+        <Route path='/places/:placeId' >
+          <UpdatePlace />
+        </Route>
+        <Route path='/auth' exact> 
+          <Auth />
         </Route>
         <Redirect to='/' />
       </Switch>

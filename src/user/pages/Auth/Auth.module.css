@@ -1,0 +1,15 @@
+.Auth {
+    width: 90%;
+    max-width: 25rem;
+    margin: 7rem auto;
+    text-align: center;
+}
+
+.Header {
+    color: rgb(36, 26, 26);
+    text-align: center;
+}
+
+.Auth form {
+    margin-bottom: 1rem;
+}

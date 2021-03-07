@@ -9,8 +9,8 @@ const reducer: Reducer<InputState, Action<InputAction, InputPayload>> = (state, 
         case InputAction.CHANGE:
             return {
                 ...state,
-                value: action.payload?.value,
-                isValid: validate(action.payload?.value, action.validators || [])
+                value: action.payload.value,
+                isValid: validate(action.payload.value, action.validators || [])
             };
         case InputAction.TOUCH:
             return {

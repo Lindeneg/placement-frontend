@@ -23,6 +23,7 @@ interface PlaceListItemProps extends BaseProps, Place {};
 const PlaceListItem: Functional<PlaceListItemProps> = props => {
 
     const [showMap, setShowMap]: UseStateTuple<boolean> = useState<boolean>(false);
+    const [showDeleteConfirm, setDeleteConfirm]: UseStateTuple<boolean> = useState<boolean>(false);
 
     const onOpenMapHandler = () => {
         setShowMap(true);
@@ -30,6 +31,19 @@ const PlaceListItem: Functional<PlaceListItemProps> = props => {
 
     const onCloseMapHandler = () => {
         setShowMap(false);
+    };
+
+    const onOpenDeleteConfirmHandler = () => {
+        setDeleteConfirm(true);
+    };
+
+    const onCloseDeleteConfirmHandler = () => {
+        setDeleteConfirm(false);
+    };
+
+    const onConfirmDelete = () => {
+        console.log('DELETE PLACE: ' + props.id);
+        setDeleteConfirm(false);
     };
 
     return (
@@ -49,6 +63,20 @@ const PlaceListItem: Functional<PlaceListItemProps> = props => {
                     />
                 </div>
             </Modal>
+            <Modal
+                show={showDeleteConfirm}
+                onClose={onCloseDeleteConfirmHandler}
+                headerText='Are you sure?'
+                footerCls={classes.ModalActions}
+                footerNodes={
+                    <Fragment>
+                        <Button inverse onClick={onCloseDeleteConfirmHandler} >CANCEL</Button>
+                        <Button danger onClick={onConfirmDelete} >DELETE</Button>
+                    </Fragment>
+                }
+            >
+                Are you sure you'd want to proceed? The action cannot be undone.
+            </Modal>
             <li className={classes.Item}>
                 <Card className={classes.Content} >
                     <div className={classes.Image}>
@@ -64,7 +92,7 @@ const PlaceListItem: Functional<PlaceListItemProps> = props => {
 
                         <Button link={{to: `places/${props.id}`}}>EDIT</Button>
 
-                        <Button danger>DELETE</Button>
+                        <Button danger onClick={onOpenDeleteConfirmHandler}>DELETE</Button>
                     </div>
                 </Card>
             </li>

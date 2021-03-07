@@ -20,7 +20,7 @@ const NavLinks: Functional = props => (
             <NavLink activeClassName={classes.Active} to='/places/new'>ADD PLACE</NavLink>
         </li>
         <li>
-            <NavLink activeClassName={classes.Active} to='/auth'>LOGIN</NavLink>
+            <NavLink activeClassName={classes.Active} to='/auth'>AUTH</NavLink>
         </li>
     </ul>
 );

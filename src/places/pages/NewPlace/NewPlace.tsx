@@ -1,41 +1,17 @@
-import { useReducer, useCallback } from 'react';
 
-import reducer from './reducer';
-import NewPlaceAction from './actions';
+import useForm from '../../../common/hooks/form';
 import Button from '../../../common/components/Interaction/Button/Button';
 import Input from '../../../common/components/Interaction/Input/Input';
 import { getValidator } from '../../../common/util/validators';
 import { 
     BaseProps, 
     Functional, 
-    UseReducerTuple, 
     ValidationType, 
-    ValidationValue,
-    Identifiable,
-    SIndexable,
     OnSubmitFunc
 } from "../../../common/types";
-import classes from './NewPlace.module.css';
 
 
 interface NewPlaceProps extends BaseProps {};
-
-interface NewPlaceStateMetaEntry extends SIndexable<ValidationValue | boolean> {
-    value: ValidationValue,
-    isValid: boolean
-};
-
-interface NewPlaceStateEntry extends SIndexable<NewPlaceStateMetaEntry> {};
-
-export interface NewPlaceState extends SIndexable<NewPlaceStateEntry | boolean> {
-    inputs: NewPlaceStateEntry,
-    isValid: boolean
-};
-
-export interface NewPlacePayload extends Identifiable {
-    value: ValidationValue,
-    isValid: boolean
-};
 
 
 /**
@@ -44,19 +20,14 @@ export interface NewPlacePayload extends Identifiable {
 
 const NewPlace: Functional<NewPlaceProps> = props => {
 
-    const [state, dispatch]: UseReducerTuple<NewPlaceState, NewPlaceAction, NewPlacePayload> = useReducer(
-        reducer,
-        {
-            inputs: { title: { value: '', isValid: false}, description: { value: '', isValid: false} },
-            isValid: false
-        }
-    );
-
-    const inputHandler = useCallback((id: string, value: string, isValid: boolean): void => {
-        dispatch({type: NewPlaceAction.NEW_PLACE_CHANGE_INPUT, payload: {
-            value, isValid, id
-        }});
-    }, []);
+    const [state, inputHandler] = useForm({
+        inputs: { 
+            title      : { value: '', isValid: false}, 
+            description: { value: '', isValid: false},
+            address    : { value: '', isValid: false} 
+    },
+        isValid: false,
+    });
 
     const onSubmitHandler: OnSubmitFunc = event => {
         event.preventDefault();
@@ -64,7 +35,7 @@ const NewPlace: Functional<NewPlaceProps> = props => {
     };
 
     return (
-        <form className={classes.Form} onSubmit={onSubmitHandler}>
+        <form className='generic__form-wrapper' onSubmit={onSubmitHandler}>
             <Input 
                 id='title'
                 onInput={inputHandler}

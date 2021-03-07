@@ -147,6 +147,10 @@ export interface UserPlacesParams {
     userId: string
 };
 
+export interface UpdatePlaceParams {
+    placeId: string
+};
+
 /**********************
  ****** ACTIONS  ******
  **********************/

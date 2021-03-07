@@ -18,11 +18,13 @@ import classes from './Input.module.css';
 interface InputProps extends BaseProps, Partial<Identifiable> {
     onInput       : (...args: any[]) => void
     element       : 'input' | 'text-area',
-    type        ? : 'text' | 'number',
+    type        ? : 'text' | 'number' | 'email',
+    value       ? : string | number,
     label       ? : string,
     errorText   ? : string,
     placeHolder ? : string,
     rows        ? : number,
+    valid       ? : boolean
     validators  ? : Validator[],
 };
 
@@ -43,7 +45,7 @@ const Input: Functional<InputProps> = props => {
 
     const [state, dispatch]: UseReducerTuple<InputState, InputAction, InputPayload> = useReducer(
         inputReducer, 
-        {value: '', isValid: false, isTouched: false}
+        {value: props.value || '', isValid: props.valid || false, isTouched: false}
     );
 
     const onChangeHandler: OnChange<HTMLInputElement | HTMLTextAreaElement> = event => {
