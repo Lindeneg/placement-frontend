@@ -39,3 +39,14 @@
     border-color: red;
     background: #ffd1d1;
 }
+
+.Valid label,
+.Valid p {
+    color: green;
+}
+
+.Valid input,
+.Valid textarea {
+    border-color: green;
+    background: #d1ffd6;
+}
