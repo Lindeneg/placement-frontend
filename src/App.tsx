@@ -13,13 +13,13 @@ import UpdatePlace from './places/pages/UpdatePlace/UpdatePlace';
 import UserPlaces from './places/pages/UserPlaces/UserPlaces';
 import NewPlace from './places/pages/NewPlace/NewPlace';
 import AuthContext from './common/context/auth';
-import { Functional } from "./common/types";
+import { Functional, UseStateTuple } from "./common/types";
 import classes from './App.module.css';
 
 
 const App: Functional = () => {
 
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [isLoggedIn, setIsLoggedIn]: UseStateTuple<boolean> = useState<boolean>(false);
 
   const login = useCallback(() => {
     setIsLoggedIn(true)
@@ -29,32 +29,52 @@ const App: Functional = () => {
     setIsLoggedIn(false)
   }, []);
 
+  let routes: JSX.Element;
+
+  if (isLoggedIn) {
+    routes = (
+		<Switch>
+			<Route path='/' exact> 
+				<Users />
+			</Route>
+			<Route path='/:userId/places' exact >
+				<UserPlaces />
+			</Route>
+			<Route path='/places/new' exact> 
+				<NewPlace />
+			</Route>
+			<Route path='/places/:placeId' >
+				<UpdatePlace />
+			</Route>
+			<Redirect to='/' />
+		</Switch>
+    );
+  } else {
+    routes = (
+		<Switch>
+			<Route path='/' exact> 
+				<Users />
+			</Route>
+			<Route path='/:userId/places' exact >
+				<UserPlaces />
+			</Route>
+			<Route path='/auth' exact> 
+				<Auth />
+			</Route>
+			<Redirect to='/auth' />
+		</Switch>
+    );
+  }
+
   return (
-    <AuthContext.Provider value={{ isLoggedIn, login, logout }}>
-      <Router>
-        <Nav />
-        <main className={classes.App} >
-          <Switch>
-            <Route path='/' exact> 
-              <Users />
-            </Route>
-            <Route path='/:userId/places' exact >
-              <UserPlaces />
-            </Route>
-            <Route path='/places/new' exact> 
-              <NewPlace />
-            </Route>
-            <Route path='/places/:placeId' >
-              <UpdatePlace />
-            </Route>
-            <Route path='/auth' exact> 
-              <Auth />
-            </Route>
-            <Redirect to='/' />
-          </Switch>
-        </main>
-      </Router>
-    </AuthContext.Provider>
+	<AuthContext.Provider value={{ isLoggedIn, login, logout }}>
+		<Router>
+		<Nav />
+			<main className={classes.App} >
+				{routes}
+			</main>
+		</Router>
+	</AuthContext.Provider>
   )
 };
 
