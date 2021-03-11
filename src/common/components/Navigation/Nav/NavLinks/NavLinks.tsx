@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useHistory } from 'react-router-dom';
 
 import Button from '../../../Interaction/Button/Button';
 import AuthContext from '../../../../context/auth';
@@ -12,8 +12,13 @@ import classes from './NavLinks.module.css';
  */
 
 const NavLinks: Functional = props => {
-
+    const history     = useHistory();
     const authContext = useContext(AuthContext);
+
+    const onLogOut = (): void => {
+        authContext.logout();
+        history.push('/');
+    }
 
     return (
         <ul className={classes.Link}>
@@ -30,7 +35,7 @@ const NavLinks: Functional = props => {
                 <NavLink activeClassName={classes.Active} to='/auth'>LOGIN/SIGNUP</NavLink>
             </li>}
             {authContext.isLoggedIn && <li>
-                <Button inverse onClick={authContext.logout} >LOGOUT</Button>
+                <Button inverse onClick={onLogOut} >LOGOUT</Button>
             </li>}
         </ul>
     )
