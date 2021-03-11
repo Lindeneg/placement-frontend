@@ -52,6 +52,7 @@ const Button: Functional<ButtonProps> = props => {
                 onClick={props.onClick}
                 disabled={props.disabled}
                 className={cls}
+                style={props.style}
             >
                 {props.children}
             </button>
