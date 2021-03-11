@@ -140,19 +140,11 @@ export type Portal <
  ***  CORE STRUCTS  ***
  **********************/
 
-export interface Place extends Identifiable {
-    creatorId  : string,
-    title      : string,
-    description: string,
-    image      : string,
-    address    : string,
-    location   : Location
-};
-
 export interface IResponse {
     _id        : string,
     createdOn  : number,
-    updatedOn  : number
+    updatedOn  : number,
+    token     ?: string,
     message   ?: string
 };
 
