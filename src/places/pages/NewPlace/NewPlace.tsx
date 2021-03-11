@@ -50,7 +50,9 @@ const NewPlace: Functional = props => {
             formData.append('address', state.inputs.address.value?.toString() || '');
             formData.append('creatorId', authContext.userId);
             formData.append('image', state.inputs.image.value instanceof File ? state.inputs.image.value : '');
-            await sendRequest(getURL('places'), 'POST', formData);
+            await sendRequest(getURL('places'), 'POST', formData, {
+                'Authorization': 'Bearer ' + authContext.token
+            });
             history.push('/');
         } catch(err) {
             // error handled in error state from useHttp
