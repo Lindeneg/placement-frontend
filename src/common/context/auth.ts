@@ -4,7 +4,8 @@ import { createContext, Context } from 'react';
 interface IAuthContext {
     isLoggedIn: boolean,
     userId    : string,
-    login     : (userId: string) => void,
+    token     : string,
+    login     : (userId: string, responseToken: string) => void,
     logout    : () => void
 };
 
@@ -12,7 +13,8 @@ interface IAuthContext {
 const AuthContext: Context<IAuthContext> = createContext<IAuthContext>({
     isLoggedIn: false,
     userId    : '',
-    login     : (userId: string) => null,
+    token     : '',
+    login     : (userId: string, responseToken: string) => null,
     logout    : () => null
 });
 
