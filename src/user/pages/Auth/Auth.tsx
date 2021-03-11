@@ -1,5 +1,4 @@
 import { useState, useContext, Fragment } from 'react';
-import { useHistory } from 'react-router-dom';
 
 import useForm from '../../../common/hooks/form';
 import useHttp from '../../../common/hooks/http';
@@ -18,7 +17,6 @@ import classes from './Auth.module.css';
 
 
 const Auth: Functional = props => {
-    const history                                               = useHistory();
     const authContext                                           = useContext(AuthContext);
     const [isInLoginMode, setLoginMode]: UseStateTuple<boolean> = useState<boolean>(true);
     const { isLoading, error, clearError, sendRequest }         = useHttp<UserResponse>();
@@ -44,8 +42,7 @@ const Auth: Functional = props => {
                         password: state.inputs.password.value
                     }),
                     { 'Content-Type': 'application/json' });
-                res && authContext.login(res._id);
-                res && history.push(`/${res._id}/places`)
+                res && authContext.login(res._id, res.token || '');
             } catch (err) {
                 // error handled in error state from useHttp
             }
@@ -64,7 +61,7 @@ const Auth: Functional = props => {
                     'POST',
                     formData
                 );
-                res && authContext.login(res._id);
+                res && authContext.login(res._id, res.token || '');
             } catch(err) {
                 // error handled in error state from useHttp
             }
