@@ -37,6 +37,13 @@
     color: mediumseagreen;
 }
 
+.Info p {
+    font-size: 0.7rem;
+    margin: 0;
+    text-decoration: underline;
+    color: burlywood;
+}
+
 .Item:hover h2,
 .Item:active h2,
 .Item:hover h3,
