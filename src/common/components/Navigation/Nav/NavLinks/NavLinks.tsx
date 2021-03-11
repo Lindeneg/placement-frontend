@@ -21,7 +21,7 @@ const NavLinks: Functional = props => {
                 <NavLink activeClassName={classes.Active} to='/' exact>ALL USERS</NavLink>
             </li>
             {authContext.isLoggedIn && <li>
-                <NavLink activeClassName={classes.Active} to='/u1/places'>MY PLACES</NavLink>
+                <NavLink activeClassName={classes.Active} to={`/${authContext.userId}/places`}>MY PLACES</NavLink>
             </li>}
             {authContext.isLoggedIn && <li>
                 <NavLink activeClassName={classes.Active} to='/places/new'>ADD PLACE</NavLink>

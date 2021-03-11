@@ -1,52 +1,53 @@
+import { useState, useEffect, Fragment } from 'react';
 import { useParams } from 'react-router-dom'
 
+import useHttp from '../../../common/hooks/http';
+import ErrorModal from '../../../common/components/UI/Modal/ErrorModal/ErrorModal';
+import Spinner from '../../../common/components/UI/Spinner/Spinner';
 import PlaceList from '../../components/PlaceList/PlaceList';
+import { getURL } from '../../../common/util/util';
 import { 
-    BaseProps, 
     Functional, 
-    Place, 
-    UserPlacesParams 
+    UserPlacesParams,
+    PlaceResponse
 } from "../../../common/types";
-
-
-interface UserPlacesProps extends BaseProps {
-
-};
-
-const DUMMY_DATA: Place[] = [
-    {
-        id: 'p1',
-        creatorId: 'u1',
-        title: 'Sweet home!',
-        description: 'Cosy place to live.',
-        image: 'https://s19623.pcdn.co/wp-content/uploads/2015/08/copenhagen-budget-guide.jpg',
-        address: 'Ulstensvej 51, 2650 Valby',
-        location: {lat: 55.667315, lng: 12.507300}
-    },
-    {
-        id: 'p2',
-        creatorId: 'u2',
-        title: 'Eeeew Sweden!',
-        description: 'I dont feel sorry for them.',
-        image: 'https://www.gavelintl.com/wp-content/uploads/2018/06/stockholm1.jpg',
-        address: 'Liljeholmen 11, 21120 Stockholm',
-        location: {lat: 59.308010, lng: 18.034725}
-    }
-];
 
 
 /**
  * Component with list of Places tied to a given User.
  */
 
-const UserPlaces: Functional<UserPlacesProps> = props => {
+const UserPlaces: Functional = props => {
+    const { isLoading, error, clearError, sendRequest } = useHttp<PlaceResponse[]>();
+    const [places, setPlaces]                           = useState<PlaceResponse[]>([]);
+    const [didRequest, setDidRequest]                   = useState<boolean>(false);
+    const userId: string                                = useParams<UserPlacesParams>().userId;
 
-    const param = useParams<UserPlacesParams>();
-    const loadedPlaces = DUMMY_DATA.filter((e: Place): boolean => e.creatorId === param.userId);
+    useEffect(() => {
+        (async () => {
+            try {
+                const res: PlaceResponse[] | void = await sendRequest(getURL(`places/user/${userId}`));
+                res && setPlaces(res);
+            } catch(err) {
+                // error handled in error state from useHttp
+            } finally {
+                setDidRequest(true);
+            }
+        })();
+    }, [sendRequest, userId]);
+
+    const onPlaceDeleteHandler = (placeId: string): void => {
+        setPlaces(prev => prev.filter(e => e._id !== placeId));
+    }
+
     return (
-        <PlaceList 
-            places={loadedPlaces}
-        />
+        <Fragment>
+            <ErrorModal onClear={clearError} error={error} show={!!error} />
+            {isLoading && <div className='center'><Spinner asOverlay /></div>} 
+            {!isLoading && didRequest && <PlaceList 
+                places={places}
+                onDelete={onPlaceDeleteHandler} />}
+        </Fragment>
     )
 };
 

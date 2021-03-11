@@ -20,13 +20,16 @@ import classes from './App.module.css';
 const App: Functional = () => {
 
   const [isLoggedIn, setIsLoggedIn]: UseStateTuple<boolean> = useState<boolean>(false);
+  const [userId, setUserId]        : UseStateTuple<string>  = useState<string>('');
 
-  const login = useCallback(() => {
-    setIsLoggedIn(true)
+  const login = useCallback((userId: string) => {
+    setIsLoggedIn(true);
+	setUserId(userId);
   }, []);
 
   const logout = useCallback(() => {
-    setIsLoggedIn(false)
+    setIsLoggedIn(false);
+	setUserId('');
   }, []);
 
   let routes: JSX.Element;
@@ -67,7 +70,7 @@ const App: Functional = () => {
   }
 
   return (
-	<AuthContext.Provider value={{ isLoggedIn, login, logout }}>
+	<AuthContext.Provider value={{ isLoggedIn, login, logout, userId }}>
 		<Router>
 		<Nav />
 			<main className={classes.App} >

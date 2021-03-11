@@ -1,19 +1,24 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, Fragment } from 'react';
 
 import useForm from '../../../common/hooks/form';
+import useHttp from '../../../common/hooks/http';
 import Input from '../../../common/components/Interaction/Input/Input';
 import Card from '../../../common/components/UI/Card/Card';
+import ErrorModal from '../../../common/components/UI/Modal/ErrorModal/ErrorModal';
+import Spinner from '../../../common/components/UI/Spinner/Spinner';
 import Button from '../../../common/components/Interaction/Button/Button';
 import AuthContext from '../../../common/context/auth';
-import { Functional, OnClickFunc, OnSubmitFunc, UseStateTuple, ValidationType } from "../../../common/types";
+import { Functional, OnClickFunc, OnSubmitFunc, UseStateTuple, ValidationType, UserResponse } from "../../../common/types";
+import { getURL } from '../../../common/util/util';
 import { getValidator } from '../../../common/util/validators';
 import classes from './Auth.module.css';
 
 
-const Login: Functional = props => {
 
+const Auth: Functional = props => {
     const authContext                                           = useContext(AuthContext);
-    const [isInLoginMode, setLoginMode]: UseStateTuple<boolean> = useState<boolean>(false);
+    const [isInLoginMode, setLoginMode]: UseStateTuple<boolean> = useState<boolean>(true);
+    const { isLoading, error, clearError, sendRequest }         = useHttp<UserResponse>();
 
     const [state, inputHandler, setFormState] = useForm({
         inputs: {
@@ -23,10 +28,40 @@ const Login: Functional = props => {
         isValid: false
     });
 
-    const onSubmitHandler: OnSubmitFunc = event => {
+    const onSubmitHandler: OnSubmitFunc = async event => {
         event.preventDefault();
-        console.log(state.inputs);
-        authContext.login();
+
+        if (isInLoginMode) {
+            try {
+                const res: UserResponse | void = await sendRequest(
+                    getURL('users/login'), 
+                    'POST',
+                    JSON.stringify({
+                        email: state.inputs.email.value,
+                        password: state.inputs.password.value
+                    }),
+                    { 'Content-Type': 'application/json' });
+                    res && authContext.login(res._id);
+            } catch (err) {
+                // error handled in error state from useHttp
+            }
+        } else {
+            try {
+                const res: UserResponse | void = await sendRequest(
+                    getURL('users/signup'), 
+                    'POST',
+                    JSON.stringify({
+                        name: state.inputs.name.value,
+                        email: state.inputs.email.value,
+                        password: state.inputs.password.value,
+                        image: 'https://e-cdns-images.dzcdn.net/images/artist/91af9c19ce55e3764b8fab54047a09a7/500x500.jpg'
+                    }),
+                    { 'Content-Type': 'application/json' });
+                    res && authContext.login(res._id);
+            } catch(err) {
+                // error handled in error state from useHttp
+            }
+        }
     };
 
     const onToggleModeHandler: OnClickFunc = () => {
@@ -51,62 +86,66 @@ const Login: Functional = props => {
     };
 
     return (
-        <Card className={classes.Auth} style={{maxWidth: '40rem'}}>
-            <h2 className={classes.Header}>{isInLoginMode ? 'Proceed Login' : 'Proceed Sign Up'}</h2>
-            <hr />
-            <form className='generic__form-wrapper' onSubmit={onSubmitHandler} >
-                {!isInLoginMode && 
+        <Fragment>
+            {error && <ErrorModal onClear={clearError} error={error} show={!!error} />}
+            <Card className={classes.Auth} style={{maxWidth: '40rem'}}>
+                {isLoading && <Spinner asOverlay />}
+                <h2 className={classes.Header}>{isInLoginMode ? 'Proceed Login' : 'Proceed Sign Up'}</h2>
+                <hr />
+                <form className='generic__form-wrapper' onSubmit={onSubmitHandler} >
+                    {!isInLoginMode && 
+                        <Input 
+                        id='name'
+                        label='Name'
+                        element='input'
+                        type='text'
+                        errorText='Please enter a name.'
+                        onInput={inputHandler}
+                        validators={[getValidator(ValidationType.Require)]}
+                    />}
                     <Input 
-                    id='name'
-                    label='Name'
-                    element='input'
-                    type='text'
-                    errorText='Please enter a name.'
-                    onInput={inputHandler}
-                    validators={[getValidator(ValidationType.Require)]}
-                />}
-                <Input 
-                    id='email'
-                    label='Email'
-                    element='input'
-                    type='email'
-                    errorText='Please enter a valid email address.'
-                    onInput={inputHandler}
-                    validators={[
-                        getValidator(ValidationType.Require),
-                        getValidator(ValidationType.Email)
-                    ]}
-                />
-                <Input 
-                    id='password'
-                    label='Password'
-                    element='input'
-                    type='password'
-                    errorText='Please enter a valid password (at least 8 characters but at most 32).'
-                    onInput={inputHandler}
-                    validators={[
-                        getValidator(ValidationType.Require),
-                        getValidator(ValidationType.MinLength, 8),
-                        getValidator(ValidationType.MaxLength, 32)
-                    ]}
-                />
-                <Button
-                    type='submit'
-                    disabled={!state.isValid}
+                        id='email'
+                        label='Email'
+                        element='input'
+                        type='email'
+                        errorText='Please enter a valid email address.'
+                        onInput={inputHandler}
+                        validators={[
+                            getValidator(ValidationType.Require),
+                            getValidator(ValidationType.Email)
+                        ]}
+                    />
+                    <Input 
+                        id='password'
+                        label='Password'
+                        element='input'
+                        type='password'
+                        errorText='Please enter a valid password (at least 8 characters but at most 32).'
+                        onInput={inputHandler}
+                        validators={[
+                            getValidator(ValidationType.Require),
+                            getValidator(ValidationType.MinLength, 8),
+                            getValidator(ValidationType.MaxLength, 32)
+                        ]}
+                    />
+                    <Button
+                        type='submit'
+                        disabled={!state.isValid}
+                    >
+                        {isInLoginMode ? 'LOGIN' : 'SIGNUP'}
+                    </Button>
+                </form>
+                <Button 
+                    inverse 
+                    type='button'
+                    onClick={onToggleModeHandler}
                 >
-                    {isInLoginMode ? 'LOGIN' : 'SIGNUP'}
+                        {isInLoginMode ? 'SWITCH TO SIGNUP' : 'SWITCH TO LOGIN'}
                 </Button>
-            </form>
-            <Button 
-                inverse 
-                type='button'
-                onClick={onToggleModeHandler}
-            >
-                    {isInLoginMode ? 'SWITCH TO SIGNUP' : 'SWITCH TO LOGIN'}
-            </Button>
-        </Card>
+            </Card>
+        </Fragment>
     );
 };
 
 
-export default Login;
+export default Auth;

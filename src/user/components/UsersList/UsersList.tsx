@@ -4,12 +4,12 @@ import {
     BaseProps, 
     Functional 
 } from "../../../common/types";
-import { User } from "../../../common/types";
+import { UserResponse } from "../../../common/types";
 import classes from './UsersList.module.css';
 
 
 interface UserListProps extends BaseProps {
-    users: User[]
+    users: UserResponse[]
 };
 
 
@@ -29,8 +29,8 @@ const UsersList: Functional<UserListProps> = props => {
     }
     return (
         <ul className={classes.List}>
-            {props.users.map((user: User): JSX.Element => (
-                <UserListItem key={user.id} {...user} />
+            {props.users.map((user: UserResponse): JSX.Element => (
+                <UserListItem key={user._id} {...user} />
             ))}
         </ul>
     );

@@ -68,6 +68,22 @@ export interface SIndexable < T > {
     [key: string]: T
 };
 
+export type HttpMethod = 'GET' | 'POST' | 'PATCH' | 'DELETE';
+
+export type SendRequest<T> = (
+    url    : string,
+    method ?: HttpMethod,
+    body   ?: BodyInit | null,
+    headers?: HeadersInit
+) => Promise<T | void>;
+
+export type UseHttp<T>     = {
+    isLoading  : boolean,
+    error      : string,
+    sendRequest: SendRequest<T>,
+    clearError : () => void
+};
+
 /**********************
  ****** PROPS  ********
  **********************/
@@ -124,12 +140,6 @@ export type Portal <
  ***  CORE STRUCTS  ***
  **********************/
 
-export interface User extends Identifiable {
-    image      : string,
-    name       : string,
-    placeQty   : number
-};
-
 export interface Place extends Identifiable {
     creatorId  : string,
     title      : string,
@@ -137,6 +147,29 @@ export interface Place extends Identifiable {
     image      : string,
     address    : string,
     location   : Location
+};
+
+export interface IResponse {
+    _id        : string,
+    createdOn  : number,
+    updatedOn  : number
+    message   ?: string
+};
+
+export interface PlaceResponse extends IResponse {
+    title      : string,
+    description: string,
+    image      : string,
+    address    : string,
+    creatorId  : string,
+    location   : Location,
+};
+
+export interface UserResponse extends IResponse {
+    name     : string,
+    image    : string,
+    places   : PlaceResponse[],
+    lastLogin: number
 };
 
 /**********************

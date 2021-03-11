@@ -1,12 +1,13 @@
 import PlaceListItem from './PlaceListItem/PlaceListItem';
 import Card from '../../../common/components/UI/Card/Card';
 import Button from '../../../common/components/Interaction/Button/Button';
-import { BaseProps, Functional, Place } from "../../../common/types";
+import { BaseProps, Functional, PlaceResponse } from "../../../common/types";
 import classes from './PlaceList.module.css';
 
 
 interface PlaceListProps extends BaseProps {
-    places: Place[]
+    places: PlaceResponse[],
+    onDelete: (placeId: string) => void
 };
 
 
@@ -27,8 +28,8 @@ const PlaceList: Functional<PlaceListProps> = props => {
     }
     return (
         <ul className={classes.List} >
-            {props.places.map((place: Place): JSX.Element => (
-                <PlaceListItem key={place.id} {...place} />
+            {props.places.map((place: PlaceResponse): JSX.Element => (
+                <PlaceListItem {...place} key={place._id} onDelete={props.onDelete} />
             ))}
         </ul>
     )

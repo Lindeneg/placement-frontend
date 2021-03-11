@@ -1,5 +1,8 @@
 import { Fragment, useState, useContext } from 'react';
 
+import useHttp from '../../../../common/hooks/http';
+import ErrorModal from '../../../../common/components/UI/Modal/ErrorModal/ErrorModal';
+import Spinner from '../../../../common/components/UI/Spinner/Spinner';
 import Modal from '../../../../common/components/UI/Modal/Modal';
 import AuthContext from '../../../../common/context/auth';
 import Map from '../../../../common/components/UI/Map/Map';
@@ -8,13 +11,15 @@ import Card from '../../../../common/components/UI/Card/Card';
 import { 
     BaseProps, 
     Functional, 
-    Place, 
-    UseStateTuple 
+    PlaceResponse 
 } from "../../../../common/types";
 import classes from './PlaceListItem.module.css';
+import { getURL } from '../../../../common/util/util';
 
 
-interface PlaceListItemProps extends BaseProps, Place {};
+interface PlaceListItemProps extends BaseProps, PlaceResponse {
+    onDelete: (placeId: string) => void
+};
 
 
 /**
@@ -22,10 +27,10 @@ interface PlaceListItemProps extends BaseProps, Place {};
  */
 
 const PlaceListItem: Functional<PlaceListItemProps> = props => {
-
-    const authContext                                                   = useContext(AuthContext);
-    const [showMap, setShowMap]: UseStateTuple<boolean>                 = useState<boolean>(false);
-    const [showDeleteConfirm, setDeleteConfirm]: UseStateTuple<boolean> = useState<boolean>(false);
+    const authContext                                   = useContext(AuthContext);
+    const { isLoading, error, clearError, sendRequest } = useHttp<PlaceResponse>();
+    const [showMap, setShowMap]                         = useState<boolean>(false);
+    const [showDeleteConfirm, setDeleteConfirm]         = useState<boolean>(false);
 
     const onOpenMapHandler = () => {
         setShowMap(true);
@@ -43,13 +48,19 @@ const PlaceListItem: Functional<PlaceListItemProps> = props => {
         setDeleteConfirm(false);
     };
 
-    const onConfirmDelete = () => {
-        console.log('DELETE PLACE: ' + props.id);
-        setDeleteConfirm(false);
+    const onConfirmDelete = async () => {
+        setDeleteConfirm(false); 
+        try {
+            await sendRequest(getURL(`places/${props._id}`), 'DELETE');
+            props.onDelete(props._id);
+        } catch (err) {
+            // error handled in error state from useHttp
+        }
     };
 
     return (
         <Fragment>
+            <ErrorModal onClear={clearError} error={error} show={!!error} />
             <Modal 
                 show={showMap}
                 onClose={onCloseMapHandler}
@@ -81,6 +92,7 @@ const PlaceListItem: Functional<PlaceListItemProps> = props => {
             </Modal>
             <li className={classes.Item}>
                 <Card className={classes.Content} >
+                    {isLoading && <Spinner asOverlay />}
                     <div className={classes.Image}>
                         <img src={props.image} alt={props.title}/>
                     </div>
@@ -92,8 +104,8 @@ const PlaceListItem: Functional<PlaceListItemProps> = props => {
                     <div className={classes.Actions} >
                         <Button onClick={onOpenMapHandler} inverse>VIEW ON MAP</Button>
 
-                        {authContext.isLoggedIn && <Button link={{to: `/places/${props.id}`}}>EDIT</Button>}
-                        {authContext.isLoggedIn && <Button danger onClick={onOpenDeleteConfirmHandler}>DELETE</Button>}
+                        {props.creatorId === authContext.userId && <Button link={{to: `/places/${props._id}`}}>EDIT</Button>}
+                        {props.creatorId === authContext.userId && <Button danger onClick={onOpenDeleteConfirmHandler}>DELETE</Button>}
                     </div>
                 </Card>
             </li>

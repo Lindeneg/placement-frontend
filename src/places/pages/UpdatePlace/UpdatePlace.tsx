@@ -1,40 +1,31 @@
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Fragment, useEffect, useState } from 'react';
+import { useParams, useHistory } from 'react-router-dom';
 
+import useHttp from '../../../common/hooks/http';
 import useForm from '../../../common/hooks/form';
+import ErrorModal from '../../../common/components/UI/Modal/ErrorModal/ErrorModal';
+import Spinner from '../../../common/components/UI/Spinner/Spinner';
+import Card from '../../../common/components/UI/Card/Card';
 import Input from '../../../common/components/Interaction/Input/Input';
 import Button from '../../../common/components/Interaction/Button/Button';
-import Card from '../../../common/components/UI/Card/Card';
-import { Functional, OnSubmitFunc, Place, UpdatePlaceParams, UseStateTuple, ValidationType } from "../../../common/types";
+import { getURL } from '../../../common/util/util';
 import { getValidator } from '../../../common/util/validators';
+import { 
+    Functional, 
+    OnSubmitFunc, 
+    UpdatePlaceParams, 
+    PlaceResponse, 
+    ValidationType 
+} from "../../../common/types";
 
-
-
-const DUMMY_DATA: Place[] = [
-    {
-        id: 'p1',
-        creatorId: 'u1',
-        title: 'Sweet home!',
-        description: 'Cosy place to live.',
-        image: 'https://s19623.pcdn.co/wp-content/uploads/2015/08/copenhagen-budget-guide.jpg',
-        address: 'Ulstensvej 51, 2650 Valby',
-        location: {lat: 55.667315, lng: 12.507300}
-    },
-    {
-        id: 'p2',
-        creatorId: 'u2',
-        title: 'Eeeew Sweden!',
-        description: 'I dont feel sorry for them.',
-        image: 'https://www.gavelintl.com/wp-content/uploads/2018/06/stockholm1.jpg',
-        address: 'Liljeholmen 11, 21120 Stockholm',
-        location: {lat: 59.308010, lng: 18.034725}
-    }
-];
 
 
 const UpdatePlace: Functional = props => {
-    const [isLoading, setIsLoading]: UseStateTuple<boolean> = useState<boolean>(true);
-    const param = useParams<UpdatePlaceParams>();
+    const history                                       = useHistory();
+    const { isLoading, error, clearError, sendRequest } = useHttp<PlaceResponse>();
+    const [didRequest, setDidRequest]                   = useState<boolean>(false);
+    const [place, setPlace]                             = useState<PlaceResponse | void>();
+    const placeId: string                               = useParams<UpdatePlaceParams>().placeId;
 
     const [state, inputHandler, setFormState] = useForm({
         inputs: {
@@ -44,71 +35,85 @@ const UpdatePlace: Functional = props => {
         isValid: false
     });
 
-    const onSubmitHandler: OnSubmitFunc = event => {
+    const onSubmitHandler: OnSubmitFunc = async event => {
         event.preventDefault();
-        console.log(state.inputs);
-    };
-    
-    const place = DUMMY_DATA.find(e => e.id === param.placeId);
-    
-    useEffect(() => {
-        if (place) {
-            setFormState({
-                inputs: {
-                    title: { value: place.title, isValid: true },
-                    description: { value: place.description, isValid: true }
-                },
-                isValid: true
-            });
+        try {
+            await sendRequest(getURL(`places/${placeId}`), 'PATCH', JSON.stringify({
+                title      : state.inputs.title.value,
+                description: state.inputs.description.value
+            }), { 'Content-Type': 'application/json' });
+            history.goBack();
+        } catch (err) {
+            // error handled in error state from useHttp
         }
-        setIsLoading(false);
-    }, [setFormState, place]);
+    };
 
+    useEffect(() => {
+        (async () => {
+            try {
+                const res: PlaceResponse | void = await sendRequest(getURL(`places/${placeId}`));
+                setPlace(res);
+                res && setFormState({
+                    inputs: {
+                        title: { value: res.title, isValid: true },
+                        description: { value: res.description, isValid: true }
+                    },
+                    isValid: true
+                });
+            } catch(err) {
+                // error handled in error state from useHtt
+            } finally {
+                setDidRequest(true);
+            }
+        })();
+    }, [sendRequest, setFormState, placeId]);
 
-    if (isLoading) {
+    if (!place && !error && didRequest) {
         return (
-            <div className='center'><h2>Loading...</h2></div>
+            <div className='center'>
+                <Card>
+                    <h2>
+                        Desired place could not be found.
+                    </h2>
+                </Card>
+            </div>
         );
     }
-
-    if (!place) {
-        return (
-            <Card>
-                <div className='center'><h2>Could not find place.</h2></div>
-            </Card>
-        );
-    }
-
+    
     return (
-        <form className='generic__form-wrapper' onSubmit={onSubmitHandler}>
-            <Input 
-                id='title'
-                label='Title'
-                element='input'
-                type='text'
-                errorText='Enter a valid title'
-                onInput={inputHandler}
-                validators={[getValidator(ValidationType.Require)]}
-                value={state.inputs.title.value}
-                valid={state.inputs.title.isValid}
-            />
-            <Input 
-                id='description'
-                label='Description'
-                element='text-area'
-                errorText='Enter a valid description (at least 5 characters)'
-                onInput={inputHandler}
-                validators={[getValidator(ValidationType.MinLength, 5)]}
-                value={state.inputs.description.value}
-                valid={state.inputs.description.isValid}
-            />
-            <Button
-                type='submit'
-                disabled={!state.isValid}
-            >
-                Submit Change
-            </Button>
-        </form>
+        <Fragment>
+            {error && <ErrorModal onClear={clearError} error={error} show={!!error} />}
+            {isLoading && <Spinner asOverlay />}
+            {!isLoading && place && <form className='generic__form-wrapper' onSubmit={onSubmitHandler}>
+                <Input 
+                    id='title'
+                    label='Title'
+                    element='input'
+                    type='text'
+                    errorText='Enter a valid title'
+                    onInput={inputHandler}
+                    validators={[getValidator(ValidationType.Require)]}
+                    value={place.title}
+                    valid={!!place.title}
+                />
+                <Input 
+                    id='description'
+                    label='Description'
+                    element='text-area'
+                    errorText='Enter a valid description (at least 5 characters)'
+                    onInput={inputHandler}
+                    validators={[getValidator(ValidationType.MinLength, 5)]}
+                    value={place.description}
+                    valid={!!place.description}
+                />
+                <Button
+                    type='submit'
+                    disabled={!state.isValid}
+                >
+                    Submit Change
+                </Button>
+            </form>}
+        </Fragment>
     )
 };
 
