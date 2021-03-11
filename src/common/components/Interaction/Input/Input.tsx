@@ -79,7 +79,7 @@ const Input: Functional<InputProps> = props => {
                     placeholder={props.placeHolder} 
                     onChange={onChangeHandler}
                     onBlur={onTouchHandler}
-                    value={state.value}
+                    value={state.value?.toString()}
                 />
             );
             break;
@@ -90,7 +90,7 @@ const Input: Functional<InputProps> = props => {
                     rows={props.rows || 3}
                     onChange={onChangeHandler}
                     onBlur={onTouchHandler}
-                    value={state.value}
+                    value={state.value?.toString()}
                 />
             );
             break;

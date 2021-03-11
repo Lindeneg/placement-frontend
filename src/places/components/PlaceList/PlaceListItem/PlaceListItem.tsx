@@ -94,7 +94,7 @@ const PlaceListItem: Functional<PlaceListItemProps> = props => {
                 <Card className={classes.Content} >
                     {isLoading && <Spinner asOverlay />}
                     <div className={classes.Image}>
-                        <img src={props.image} alt={props.title}/>
+                        <img src={`${process.env.REACT_APP_SERVER_BASE_URL}/${props.image}`} alt={props.title}/>
                     </div>
                     <div className={classes.Info}>
                         <h2>{props.title}</h2>

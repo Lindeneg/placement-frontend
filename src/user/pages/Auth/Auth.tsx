@@ -1,8 +1,10 @@
 import { useState, useContext, Fragment } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import useForm from '../../../common/hooks/form';
 import useHttp from '../../../common/hooks/http';
 import Input from '../../../common/components/Interaction/Input/Input';
+import ImageUpload from '../../../common/components/Interaction/ImageUpload/ImageUpload';
 import Card from '../../../common/components/UI/Card/Card';
 import ErrorModal from '../../../common/components/UI/Modal/ErrorModal/ErrorModal';
 import Spinner from '../../../common/components/UI/Spinner/Spinner';
@@ -16,6 +18,7 @@ import classes from './Auth.module.css';
 
 
 const Auth: Functional = props => {
+    const history                                               = useHistory();
     const authContext                                           = useContext(AuthContext);
     const [isInLoginMode, setLoginMode]: UseStateTuple<boolean> = useState<boolean>(true);
     const { isLoading, error, clearError, sendRequest }         = useHttp<UserResponse>();
@@ -41,23 +44,27 @@ const Auth: Functional = props => {
                         password: state.inputs.password.value
                     }),
                     { 'Content-Type': 'application/json' });
-                    res && authContext.login(res._id);
+                res && authContext.login(res._id);
+                res && history.push(`/${res._id}/places`)
             } catch (err) {
                 // error handled in error state from useHttp
             }
         } else {
             try {
+                const formData: FormData = new FormData();
+                // this should only run when the desired input is present
+                // so the fallback is solely to satisfy tsc due to my type definitions 
+                // so I'll probably redo the validation types at some point
+                formData.append('name', state.inputs.name.value?.toString() || '');
+                formData.append('email', state.inputs.email.value?.toString() || '');
+                formData.append('password', state.inputs.password.value?.toString() || '');
+                formData.append('image', state.inputs.image.value instanceof File ? state.inputs.image.value : '');
                 const res: UserResponse | void = await sendRequest(
                     getURL('users/signup'), 
                     'POST',
-                    JSON.stringify({
-                        name: state.inputs.name.value,
-                        email: state.inputs.email.value,
-                        password: state.inputs.password.value,
-                        image: 'https://e-cdns-images.dzcdn.net/images/artist/91af9c19ce55e3764b8fab54047a09a7/500x500.jpg'
-                    }),
-                    { 'Content-Type': 'application/json' });
-                    res && authContext.login(res._id);
+                    formData
+                );
+                res && authContext.login(res._id);
             } catch(err) {
                 // error handled in error state from useHttp
             }
@@ -77,7 +84,8 @@ const Auth: Functional = props => {
             setFormState({
                 inputs: {
                     ...state.inputs,
-                    name: { value: '', isValid: false }
+                    name : { value: '', isValid: false },
+                    image: { value: '', isValid: false }
                 },
                 isValid: false
             });
@@ -93,8 +101,7 @@ const Auth: Functional = props => {
                 <h2 className={classes.Header}>{isInLoginMode ? 'Proceed Login' : 'Proceed Sign Up'}</h2>
                 <hr />
                 <form className='generic__form-wrapper' onSubmit={onSubmitHandler} >
-                    {!isInLoginMode && 
-                        <Input 
+                    {!isInLoginMode && <Input 
                         id='name'
                         label='Name'
                         element='input'
@@ -102,6 +109,12 @@ const Auth: Functional = props => {
                         errorText='Please enter a name.'
                         onInput={inputHandler}
                         validators={[getValidator(ValidationType.Require)]}
+                    />}
+                    {!isInLoginMode && <ImageUpload 
+                        id='image'
+                        errorText='Please provide an image.'
+                        onInput={inputHandler}
+                        center
                     />}
                     <Input 
                         id='email'

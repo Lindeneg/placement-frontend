@@ -20,7 +20,8 @@ interface Payload extends Partial<Identifiable> {
     inputs ?: Entry
 };
 
-type InputHandler = (id: string, value: string, isValid: boolean) => void;
+export type InputHandler = (id: string, value: string | File, isValid: boolean) => void;
+
 type SetFormState = (state: State) => void;
 
 enum FormActions {
@@ -73,7 +74,7 @@ const useForm = (initialState: State): [State, InputHandler, SetFormState] => {
         formReducer, { ...initialState }
     );
 
-    const inputHandler: InputHandler = useCallback((id: string, value: string, isValid: boolean): void => {
+    const inputHandler: InputHandler = useCallback((id: string, value: string | File, isValid: boolean): void => {
         dispatch({ type: FormActions.INPUT_CHANGE, payload: { value, isValid, id }});
     }, []);
 

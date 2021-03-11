@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 
 import useHttp from '../../../common/hooks/http';
 import useForm from '../../../common/hooks/form';
+import ImageUpload from '../../../common/components/Interaction/ImageUpload/ImageUpload';
 import Button from '../../../common/components/Interaction/Button/Button';
 import Input from '../../../common/components/Interaction/Input/Input';
 import ErrorModal from '../../../common/components/UI/Modal/ErrorModal/ErrorModal';
@@ -30,7 +31,8 @@ const NewPlace: Functional = props => {
         inputs: { 
             title      : { value: '', isValid: false}, 
             description: { value: '', isValid: false},
-            address    : { value: '', isValid: false} 
+            address    : { value: '', isValid: false},
+            image      : { value: '', isValid: false }
     },
         isValid: false,
     });
@@ -39,13 +41,16 @@ const NewPlace: Functional = props => {
     const onSubmitHandler: OnSubmitFunc = async event => {
         event.preventDefault();
         try {
-            await sendRequest(getURL('places'), 'POST', JSON.stringify({
-                title: state.inputs.title.value,
-                description: state.inputs.description.value,
-                address: state.inputs.address.value,
-                creatorId: authContext.userId,
-                image: 'https://jewishinsider.nyc3.digitaloceanspaces.com/wp-content/uploads/2020/04/18184101/7186961586_5ad112c3c0_k-1200x689.jpg'
-            }), { 'Content-Type': 'application/json' });
+            const formData: FormData = new FormData();
+            // this should only run when the desired input is present
+            // so the fallback is solely to satisfy tsc due to my type definitions 
+            // so I'll probably redo the validation types at some point
+            formData.append('title', state.inputs.title.value?.toString() || '');
+            formData.append('description', state.inputs.description.value?.toString() || '');
+            formData.append('address', state.inputs.address.value?.toString() || '');
+            formData.append('creatorId', authContext.userId);
+            formData.append('image', state.inputs.image.value instanceof File ? state.inputs.image.value : '');
+            await sendRequest(getURL('places'), 'POST', formData);
             history.push('/');
         } catch(err) {
             // error handled in error state from useHttp
@@ -89,9 +94,16 @@ const NewPlace: Functional = props => {
                     errorText='Please enter a valid address' 
                     validators={[getValidator(ValidationType.Require)]}
                 />
+                <ImageUpload 
+                    id='image'
+                    onInput={inputHandler}
+                    errorText='Please provide an image.'
+                    center
+                />
                 <Button 
                     type='submit'
                     disabled={!state.isValid}
+                    style={{width: '100%'}}
                 >
                     Add Place
                 </Button>

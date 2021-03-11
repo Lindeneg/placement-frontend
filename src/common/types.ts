@@ -210,7 +210,7 @@ export enum ValidationType {
     File
 };
 
-export type ValidationValue = string | number | undefined;
+export type ValidationValue = string | number | File | undefined;
 
 export interface Validator {
     type     : ValidationType,
@@ -218,7 +218,7 @@ export interface Validator {
 };
 
 export type ValidationFunc = (
-    value    : string | number, 
+    value    : string | number | File, 
     isValid  : boolean, 
     validator: Validator
 ) => boolean;
