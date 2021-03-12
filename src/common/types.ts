@@ -164,6 +164,12 @@ export interface UserResponse extends IResponse {
     lastLogin: number
 };
 
+export interface StoredData {
+    _id     : string,
+    _token  : string,
+    _expires: number
+};
+
 /**********************
  ***  ROUTE PARAMS  ***
  **********************/
