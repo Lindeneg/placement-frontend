@@ -51,7 +51,9 @@ const PlaceListItem: Functional<PlaceListItemProps> = props => {
     const onConfirmDelete = async () => {
         setDeleteConfirm(false); 
         try {
-            await sendRequest(getURL(`places/${props._id}`), 'DELETE');
+            await sendRequest(getURL(`places/${props._id}`), 'DELETE', null, {
+                'Authorization': 'Bearer ' + authContext.token
+            });
             props.onDelete(props._id);
         } catch (err) {
             // error handled in error state from useHttp

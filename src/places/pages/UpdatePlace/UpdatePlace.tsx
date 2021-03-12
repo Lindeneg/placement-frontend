@@ -1,8 +1,9 @@
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState, useContext } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 
 import useHttp from '../../../common/hooks/http';
 import useForm from '../../../common/hooks/form';
+import AuthContext from '../../../common/context/auth';
 import ErrorModal from '../../../common/components/UI/Modal/ErrorModal/ErrorModal';
 import Spinner from '../../../common/components/UI/Spinner/Spinner';
 import Card from '../../../common/components/UI/Card/Card';
@@ -21,6 +22,7 @@ import {
 
 
 const UpdatePlace: Functional = props => {
+    const authContext                                   = useContext(AuthContext);
     const history                                       = useHistory();
     const { isLoading, error, clearError, sendRequest } = useHttp<PlaceResponse>();
     const [didRequest, setDidRequest]                   = useState<boolean>(false);
@@ -41,7 +43,11 @@ const UpdatePlace: Functional = props => {
             await sendRequest(getURL(`places/${placeId}`), 'PATCH', JSON.stringify({
                 title      : state.inputs.title.value,
                 description: state.inputs.description.value
-            }), { 'Content-Type': 'application/json' });
+            }), 
+            { 
+                'Content-Type' : 'application/json',
+                'Authorization': 'Bearer ' + authContext.token
+            });
             history.goBack();
         } catch (err) {
             // error handled in error state from useHttp
