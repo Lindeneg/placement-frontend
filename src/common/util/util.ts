@@ -22,3 +22,24 @@ export const getDateFromTimestamp = (ts: number): string | null => {
     }
     return null;
 }
+
+export const setLocalV = (data: string | object, key: string = '_plcmprv'): void => {
+    try {
+        const mData: string = typeof data === 'string' ? data : JSON.stringify(data); 
+        localStorage.setItem(key, btoa(mData));
+    } catch (err) {
+        process.env.NODE_ENV === 'development' && console.log(err);
+    }
+};
+
+export const removeLocalV = (key: string = '_plcmprv'): void => {
+    localStorage.removeItem(key);
+}
+
+export function getLocalV<T>(key: string = '_plcmprv', parse: boolean = true): T | null {
+    const item: string | null = localStorage.getItem(key);
+    if (item) {
+        return parse ? JSON.parse(atob(item)) : atob(item);
+    }
+    return null;
+};
