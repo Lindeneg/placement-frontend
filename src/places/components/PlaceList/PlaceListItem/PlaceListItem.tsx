@@ -74,7 +74,7 @@ const PlaceListItem: Functional<PlaceListItemProps> = props => {
                 <div className={classes.Map}>
                     <Map 
                         center={props.location}
-                        popupContent={props.title}
+                        popupContent={props.description}
                     />
                 </div>
             </Modal>

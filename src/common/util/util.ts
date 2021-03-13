@@ -51,7 +51,7 @@ export const setLocalV = (data: string | object, key: string = '_plcmprv'): void
         const mData: string = typeof data === 'string' ? data : JSON.stringify(data); 
         localStorage.setItem(key, btoa(mData));
     } catch (err) {
-        process.env.NODE_ENV === 'development' && console.log(err);
+        devLog(err);
     }
 };
 

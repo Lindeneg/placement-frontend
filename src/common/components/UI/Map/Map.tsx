@@ -19,9 +19,6 @@ import classes from './Map.module.css';
 interface MapProps extends BaseProps, OptCls {
     center       : Location,
     popupContent?: string,
-    maxZoom     ?: number,
-    tileSize    ?: number,
-    zoomOffset  ?: number
 };
 
 
@@ -30,35 +27,36 @@ interface MapProps extends BaseProps, OptCls {
  */
 
 const Map: Functional<MapProps> = props => {
-    const [error, setError]               = useState<boolean>(true);
+    const [error, setError]               = useState<string>('');
+    const [loading, setLoading]           = useState<boolean>(true);
     const mapRef: RMutRef<HTMLDivElement> = useRef(null);
 
     useEffect(() => {
-        if (mapRef.current !== null) {
+        if (mapRef.current !== null && props.center.lat !== 0 && props.center.lng !== 0) {
             try {
+                setLoading(true);
                 const map : LeafletMap  = leaflet.map(mapRef.current).setView(props.center, 13);
                 const tile: LeafletTile = leaflet.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=' + process.env.REACT_APP_MAP_BOX_API_KEY, {
                     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
                     id         : 'mapbox/streets-v11',
-                    maxZoom    : props.maxZoom    || 18,
-                    tileSize   : props.tileSize   || 512,
-                    zoomOffset : props.zoomOffset || -1,
                 }).addTo(map);
                 tile.on('tileload', (): void => {
                     const marker: LeafletMarker = leaflet.marker(props.center).addTo(map);
                     props.popupContent && marker.bindPopup(props.popupContent);
-                    setError(false);
                 });
             } catch(err) {
+                setError('An error occurred while loading the map.Try again later.');
                 devLog(err);
-                setError(true);
+            } finally {
+                setLoading(false);
             }
         }
-    }, [props]);
+    }, [props.center, props.popupContent]);
 
     return (
         <div ref={mapRef} className={[classes.Map, props.className].join(' ')} style={props.style}>
-            {error && <p className='center'>An error occurred while loading the map.Try again later.</p>}
+            {loading && !error && <p className='center'>Loading map...</p>}
+            {error && <p className='center'>{error}</p>}
         </div>
     )
 };
