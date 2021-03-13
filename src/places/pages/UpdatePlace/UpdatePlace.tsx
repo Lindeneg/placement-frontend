@@ -1,15 +1,15 @@
 import { Fragment, useEffect, useState, useContext } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 
-import useHttp from '../../../common/hooks/http';
-import useForm from '../../../common/hooks/form';
-import AuthContext from '../../../common/context/auth';
+import useHttp from '../../../common/hooks/http.hook';
+import useForm from '../../../common/hooks/form.hook';
+import AuthContext from '../../../common/context/auth.context';
 import ErrorModal from '../../../common/components/UI/Modal/ErrorModal/ErrorModal';
 import Spinner from '../../../common/components/UI/Spinner/Spinner';
 import Card from '../../../common/components/UI/Card/Card';
 import Input from '../../../common/components/Interaction/Input/Input';
 import Button from '../../../common/components/Interaction/Button/Button';
-import { getURL } from '../../../common/util/util';
+import { getURL, devLog } from '../../../common/util/util';
 import { getValidator } from '../../../common/util/validators';
 import { 
     Functional, 
@@ -20,6 +20,9 @@ import {
 } from "../../../common/types";
 
 
+/**
+ * Component for updating a Place structure.
+ */
 
 const UpdatePlace: Functional = props => {
     const authContext                                   = useContext(AuthContext);
@@ -50,7 +53,7 @@ const UpdatePlace: Functional = props => {
             });
             history.goBack();
         } catch (err) {
-            // error handled in error state from useHttp
+            devLog(err);
         }
     };
 
@@ -67,7 +70,7 @@ const UpdatePlace: Functional = props => {
                     isValid: true
                 });
             } catch(err) {
-                // error handled in error state from useHtt
+                devLog(err);
             } finally {
                 setDidRequest(true);
             }

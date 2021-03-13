@@ -6,7 +6,7 @@ import classes from './PlaceList.module.css';
 
 
 interface PlaceListProps extends BaseProps {
-    places: PlaceResponse[],
+    places  : PlaceResponse[],
     onDelete: (placeId: string) => void
 };
 

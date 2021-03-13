@@ -2,12 +2,8 @@ import { Link } from 'react-router-dom';
 
 import Avatar from '../../../../common/components/UI/Avatar/Avatar';
 import Card from '../../../../common/components/UI/Card/Card';
-import { 
-    UserResponse, 
-    BaseProps, 
-    Functional 
-} from "../../../../common/types";
-import { getDateFromTimestamp } from '../../../../common/util/util';
+import { getCustomDateStringFromTimestamp } from '../../../../common/util/util';
+import { UserResponse, BaseProps, Functional } from "../../../../common/types";
 import classes from './UserListItem.module.css';
 
 
@@ -19,7 +15,7 @@ interface UserListItemProps extends BaseProps, UserResponse {};
  */
 
 const UserListItem: Functional<UserListItemProps> = props => {
-    const lastLogin: string | null = getDateFromTimestamp(props.lastLogin);
+    const lastLogin: string | null = getCustomDateStringFromTimestamp(props.lastLogin);
     return (
         <li className={classes.Item} >
             <Card className={classes.Content}>

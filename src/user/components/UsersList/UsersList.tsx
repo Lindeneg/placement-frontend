@@ -1,10 +1,6 @@
 import UserListItem from './UserListItem/UserListItem';
 import Card from '../../../common/components/UI/Card/Card';
-import { 
-    BaseProps, 
-    Functional 
-} from "../../../common/types";
-import { UserResponse } from "../../../common/types";
+import { BaseProps, Functional, UserResponse } from "../../../common/types";
 import classes from './UsersList.module.css';
 
 

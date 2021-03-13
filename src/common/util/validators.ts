@@ -22,8 +22,9 @@ const validationFunc: NIndexable<ValidationFunc> = {
         return isValid && /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(value.toString());
     },
     [ValidationType.File]: (value, isValid, validator) => {
-        return isValid; // TODO
-        
+        /* the file is validated server-side as the input-field whereto the file that is being validated here
+           was uploaded in, can only be an image file anyways. thus, nothing is done here. */
+        return isValid;
     },
 };
 

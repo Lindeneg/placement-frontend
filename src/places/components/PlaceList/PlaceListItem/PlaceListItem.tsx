@@ -1,20 +1,20 @@
 import { Fragment, useState, useContext } from 'react';
 
-import useHttp from '../../../../common/hooks/http';
+import useHttp from '../../../../common/hooks/http.hook';
 import ErrorModal from '../../../../common/components/UI/Modal/ErrorModal/ErrorModal';
 import Spinner from '../../../../common/components/UI/Spinner/Spinner';
 import Modal from '../../../../common/components/UI/Modal/Modal';
-import AuthContext from '../../../../common/context/auth';
+import AuthContext from '../../../../common/context/auth.context';
 import Map from '../../../../common/components/UI/Map/Map';
 import Button from '../../../../common/components/Interaction/Button/Button';
 import Card from '../../../../common/components/UI/Card/Card';
+import { getURL, devLog } from '../../../../common/util/util';
 import { 
     BaseProps, 
     Functional, 
     PlaceResponse 
 } from "../../../../common/types";
 import classes from './PlaceListItem.module.css';
-import { getURL } from '../../../../common/util/util';
 
 
 interface PlaceListItemProps extends BaseProps, PlaceResponse {
@@ -56,7 +56,7 @@ const PlaceListItem: Functional<PlaceListItemProps> = props => {
             });
             props.onDelete(props._id);
         } catch (err) {
-            // error handled in error state from useHttp
+            devLog(err);
         }
     };
 
@@ -74,7 +74,7 @@ const PlaceListItem: Functional<PlaceListItemProps> = props => {
                 <div className={classes.Map}>
                     <Map 
                         center={props.location}
-                        zoom={16}
+                        popupContent={props.title}
                     />
                 </div>
             </Modal>

@@ -3,10 +3,10 @@ import classes from './Avatar.module.css';
 
 
 interface AvatarProps extends BaseProps, OptCls {
-    src     : string,
-    alt     : string,
-    width ? : string,
-    height? : string
+    src    : string,
+    alt    : string,
+    width ?: string,
+    height?: string
 };
 
 

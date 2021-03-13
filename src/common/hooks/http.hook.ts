@@ -1,20 +1,16 @@
-import { useState, useCallback, useEffect, useRef, MutableRefObject } from 'react';
-import { UseStateTuple, IResponse, UseHttp, SendRequest } from '../types';
+import { useState, useCallback, useEffect, useRef } from 'react';
 
+import { IResponse, UseHttp, SendRequest } from '../types';
+
+/**
+ * Simple hook for using fetch to send requests. Might use axios later but fetch does the job just fine here.
+ */
 
 export default function useHttp<T> (): UseHttp<T> {
     
-    const [isLoading, setIsLoading]: UseStateTuple<
-        boolean
-    > = useState<boolean>(false);
-
-    const [error, setError]        : UseStateTuple<
-        string
-    >  = useState<string>('');
-
-    const activeRequests           : MutableRefObject<
-        AbortController[]
-    > = useRef<AbortController[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [error, setError]         = useState<string>('');
+    const activeRequests            = useRef<AbortController[]>([]);
 
     const sendRequest: SendRequest<T> = useCallback(async (url, method = 'GET', body = null, headers = {}) => {
         setIsLoading(true);

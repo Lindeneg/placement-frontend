@@ -68,10 +68,12 @@ export interface SIndexable < T > {
     [key: string]: T
 };
 
+export type Login = (userId: string, responseToken: string, tokenExpire?: number) => void;
+
 export type HttpMethod = 'GET' | 'POST' | 'PATCH' | 'DELETE';
 
 export type SendRequest<T> = (
-    url    : string,
+    url     : string,
     method ?: HttpMethod,
     body   ?: BodyInit | null,
     headers?: HeadersInit
@@ -89,8 +91,8 @@ export type UseHttp<T>     = {
  **********************/
 
 export interface BaseProps {
-    children  ? : React.ReactNode,
-    style     ? : React.CSSProperties
+    children  ?: React.ReactNode,
+    style     ?: React.CSSProperties
 };
 
 export interface OptCls {
@@ -158,16 +160,16 @@ export interface PlaceResponse extends IResponse {
 };
 
 export interface UserResponse extends IResponse {
-    name     : string,
-    image    : string,
-    places   : PlaceResponse[],
-    lastLogin: number
+    name       : string,
+    image      : string,
+    places     : PlaceResponse[],
+    lastLogin  : number
 };
 
 export interface StoredData {
-    _id     : string,
-    _token  : string,
-    _expires: number
+    _id        : string,
+    _token     : string,
+    _expires   : number
 };
 
 /**********************
@@ -187,9 +189,9 @@ export interface UpdatePlaceParams {
  **********************/
 
 export interface Action < T, P = {} > {
-    type         : T,
-    payload      : P,
-    validators ? : Validator[] 
+    type        : T,
+    payload     : P,
+    validators ?: Validator[] 
 };
 
 export interface AnyAction extends Action < 'any-action' > {};

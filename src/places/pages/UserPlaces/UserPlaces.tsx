@@ -1,11 +1,11 @@
 import { useState, useEffect, Fragment } from 'react';
 import { useParams } from 'react-router-dom'
 
-import useHttp from '../../../common/hooks/http';
+import useHttp from '../../../common/hooks/http.hook';
 import ErrorModal from '../../../common/components/UI/Modal/ErrorModal/ErrorModal';
 import Spinner from '../../../common/components/UI/Spinner/Spinner';
 import PlaceList from '../../components/PlaceList/PlaceList';
-import { getURL } from '../../../common/util/util';
+import { getURL, devLog } from '../../../common/util/util';
 import { 
     Functional, 
     UserPlacesParams,
@@ -29,7 +29,7 @@ const UserPlaces: Functional = props => {
                 const res: PlaceResponse[] | void = await sendRequest(getURL(`places/user/${userId}`));
                 res && setPlaces(res);
             } catch(err) {
-                // error handled in error state from useHttp
+                devLog(err);
             } finally {
                 setDidRequest(true);
             }

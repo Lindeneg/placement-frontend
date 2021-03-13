@@ -1,25 +1,35 @@
 import { useState, useContext, Fragment } from 'react';
 
-import useForm from '../../../common/hooks/form';
-import useHttp from '../../../common/hooks/http';
+import useForm from '../../../common/hooks/form.hook';
+import useHttp from '../../../common/hooks/http.hook';
 import Input from '../../../common/components/Interaction/Input/Input';
 import ImageUpload from '../../../common/components/Interaction/ImageUpload/ImageUpload';
 import Card from '../../../common/components/UI/Card/Card';
 import ErrorModal from '../../../common/components/UI/Modal/ErrorModal/ErrorModal';
 import Spinner from '../../../common/components/UI/Spinner/Spinner';
 import Button from '../../../common/components/Interaction/Button/Button';
-import AuthContext from '../../../common/context/auth';
-import { Functional, OnClickFunc, OnSubmitFunc, UseStateTuple, ValidationType, UserResponse } from "../../../common/types";
-import { getURL } from '../../../common/util/util';
+import AuthContext from '../../../common/context/auth.context';
+import { getURL, devLog } from '../../../common/util/util';
 import { getValidator } from '../../../common/util/validators';
+import { 
+    Functional, 
+    OnClickFunc, 
+    OnSubmitFunc, 
+    ValidationType, 
+    UserResponse 
+} from "../../../common/types";
 import classes from './Auth.module.css';
 
 
 
+/**
+ * Component to handle login and signup.
+ */
+
 const Auth: Functional = props => {
-    const authContext                                           = useContext(AuthContext);
-    const [isInLoginMode, setLoginMode]: UseStateTuple<boolean> = useState<boolean>(true);
-    const { isLoading, error, clearError, sendRequest }         = useHttp<UserResponse>();
+    const authContext                                   = useContext(AuthContext);
+    const [isInLoginMode, setLoginMode]                 = useState<boolean>(true);
+    const { isLoading, error, clearError, sendRequest } = useHttp<UserResponse>();
 
     const [state, inputHandler, setFormState] = useForm({
         inputs: {
@@ -44,7 +54,7 @@ const Auth: Functional = props => {
                     { 'Content-Type': 'application/json' });
                 res && authContext.login(res._id, res.token || '');
             } catch (err) {
-                // error handled in error state from useHttp
+                devLog(err)
             }
         } else {
             try {
@@ -63,7 +73,7 @@ const Auth: Functional = props => {
                 );
                 res && authContext.login(res._id, res.token || '');
             } catch(err) {
-                // error handled in error state from useHttp
+                devLog(err)
             }
         }
     };

@@ -1,15 +1,19 @@
 import { useState, useCallback, useEffect } from 'react';
 
-import { StoredData } from "../../common/types";
 import { getLocalV, removeLocalV, setLocalV } from '../../common/util/util';
+import { StoredData, Login } from "../../common/types";
 
 
 export interface IAuthHook {
-    token: string,
+    token : string,
     userId: string,
-    login: (userId: string, responseToken: string, tokenExpire?: number) => void,
+    login : Login,
     logout: () => void
 };
+
+/**
+ * Management of user-authentication state for other components interested in such information.
+ */
 
 export const useAuth = (): IAuthHook => {
 	const [userId, setUserId]  = useState<string>('');

@@ -16,13 +16,13 @@ import classes from './Modal.module.css';
 
 
 interface ModalProps extends BaseProps, OptCls, Visibility {
-    onClose       : OnClickFunc
-    headerCls   ? : string,
-    headerText  ? : string,
-    contentCls  ? : string,
-    footerCls   ? : string,
-    footerNodes ? : ReactNode,
-    onSubmit    ? : OnSubmitFunc
+    onClose      : OnClickFunc
+    headerCls   ?: string,
+    headerText  ?: string,
+    contentCls  ?: string,
+    footerCls   ?: string,
+    footerNodes ?: ReactNode,
+    onSubmit    ?: OnSubmitFunc
 };
 
 

@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { NavLink, useHistory } from 'react-router-dom';
 
 import Button from '../../../Interaction/Button/Button';
-import AuthContext from '../../../../context/auth';
+import AuthContext from '../../../../context/auth.context';
 import { Functional } from "../../../../types";
 import classes from './NavLinks.module.css';
 

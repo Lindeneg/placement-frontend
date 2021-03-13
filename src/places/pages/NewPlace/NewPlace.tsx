@@ -1,15 +1,15 @@
 import { Fragment, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import useHttp from '../../../common/hooks/http';
-import useForm from '../../../common/hooks/form';
+import useHttp from '../../../common/hooks/http.hook';
+import useForm from '../../../common/hooks/form.hook';
 import ImageUpload from '../../../common/components/Interaction/ImageUpload/ImageUpload';
 import Button from '../../../common/components/Interaction/Button/Button';
 import Input from '../../../common/components/Interaction/Input/Input';
 import ErrorModal from '../../../common/components/UI/Modal/ErrorModal/ErrorModal';
 import Spinner from '../../../common/components/UI/Spinner/Spinner';
-import AuthContext from '../../../common/context/auth';
-import { getURL } from '../../../common/util/util';
+import AuthContext from '../../../common/context/auth.context';
+import { getURL, devLog } from '../../../common/util/util';
 import { getValidator } from '../../../common/util/validators';
 import {  
     Functional, 
@@ -55,7 +55,7 @@ const NewPlace: Functional = props => {
             });
             history.push('/');
         } catch(err) {
-            // error handled in error state from useHttp
+            devLog(err);
         }
     };
 

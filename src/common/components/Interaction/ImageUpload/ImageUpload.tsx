@@ -8,11 +8,15 @@ import classes from './ImageUpload.module.css';
 
 
 interface ImageProps extends BaseProps, Identifiable {
-    onInput: InputHandler,
-    center?: boolean,
+    onInput   : InputHandler,
+    center   ?: boolean,
     errorText?: string
 };
 
+
+/**
+ * Selection of (image) files with a preview display added.
+ */
 
 const ImageUpload: Functional<ImageProps> = props => {
     const [file, setFile]       = useState<File>();
