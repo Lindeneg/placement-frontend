@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 
 import Button from '../Button/Button';
-import { InputHandler } from '../../../hooks/form';
+import { InputHandler } from '../../../hooks/form.hook';
 import { BaseProps, Functional, Identifiable, OnChange } from "../../../types";
 import formClasses from '../Input/Input.module.css';
 import classes from './ImageUpload.module.css';
