@@ -11,7 +11,8 @@ import {
     Functional, 
     OptCls, 
     RMutRef, 
-    Location 
+    Location,
+    INVALID_LOCATION
 } from '../../../types';
 import classes from './Map.module.css';
 
@@ -32,23 +33,27 @@ const Map: Functional<MapProps> = props => {
     const mapRef: RMutRef<HTMLDivElement> = useRef(null);
 
     useEffect(() => {
-        if (mapRef.current !== null && props.center.lat !== 0 && props.center.lng !== 0) {
-            try {
-                setLoading(true);
-                const map : LeafletMap  = leaflet.map(mapRef.current).setView(props.center, 13);
-                const tile: LeafletTile = leaflet.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=' + process.env.REACT_APP_MAP_BOX_API_KEY, {
-                    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-                    id         : 'mapbox/streets-v11',
-                }).addTo(map);
-                tile.on('tileload', (): void => {
-                    const marker: LeafletMarker = leaflet.marker(props.center).addTo(map);
-                    props.popupContent && marker.bindPopup(props.popupContent);
-                });
-            } catch(err) {
-                setError('An error occurred while loading the map.Try again later.');
-                devLog(err);
-            } finally {
-                setLoading(false);
+        if (mapRef.current !== null) {
+            if (props.center.lat !== INVALID_LOCATION && props.center.lng !== INVALID_LOCATION) {
+                try {
+                    setLoading(true);
+                    const map : LeafletMap  = leaflet.map(mapRef.current).setView(props.center, 13);
+                    const tile: LeafletTile = leaflet.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=' + process.env.REACT_APP_MAP_BOX_API_KEY, {
+                        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+                        id         : 'mapbox/streets-v11',
+                    }).addTo(map);
+                    tile.on('tileload', (): void => {
+                        const marker: LeafletMarker = leaflet.marker(props.center).addTo(map);
+                        props.popupContent && marker.bindPopup(props.popupContent);
+                    });
+                } catch(err) {
+                    setError('An error occurred while loading the map. Try again later.');
+                    devLog(err);
+                } finally {
+                    setLoading(false);
+                }
+            } else {
+                setError('The location coordinates are unfortunately invalid. No map can be shown.');
             }
         }
     }, [props.center, props.popupContent]);

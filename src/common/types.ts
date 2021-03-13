@@ -222,3 +222,5 @@ export type ValidationFunc = (
     isValid  : boolean, 
     validator: Validator
 ) => boolean;
+
+export const INVALID_LOCATION: number = 0xFFFF << 2;
