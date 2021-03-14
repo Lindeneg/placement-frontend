@@ -11,7 +11,7 @@ export const getURL = (path: string): string => (
 
 export const getCustomDateStringFromTimestamp = (ts: number): string | null => {
     const date: Date = new Date(ts);
-    const [month, day]: [number, number] = [date.getUTCMonth(), date.getUTCDate()];
+    const [month, day]: [number, number] = [date.getMonth(), date.getDate()];
     if (month < MONTHS.length) {
         let suffix: string;
         if      (day === 1)  { suffix = 'ST' }
