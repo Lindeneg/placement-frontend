@@ -21,7 +21,7 @@ const App: Functional = () => {
 	const { token, login, logout, userId }: IAuthHook = useAuth();
 	return (
 		<AuthContext.Provider value={{ isLoggedIn: !!token, login, logout, userId, token }}>
-			<BrowserRouter basename='/placement' >
+			<BrowserRouter>
 				<Nav />
 				<main className={classes.App} >
 					{token ? (
