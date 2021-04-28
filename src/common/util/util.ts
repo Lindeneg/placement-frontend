@@ -56,13 +56,21 @@ export const setLocalV = (data: string | object, key: string = '_plcmprv'): void
 };
 
 export const removeLocalV = (key: string = '_plcmprv'): void => {
-    localStorage.removeItem(key);
+    try {
+        localStorage.removeItem(key);
+    } catch (err) {
+        devLog(err);
+    }
 };
 
 export function getLocalV<T>(key: string = '_plcmprv', parse: boolean = true): T | null {
-    const item: string | null = localStorage.getItem(key);
-    if (item) {
-        return parse ? JSON.parse(atob(item)) : atob(item);
+    try {
+        const item: string | null = localStorage.getItem(key);
+        if (item) {
+            return parse ? JSON.parse(atob(item)) : atob(item);
+        }
+    } catch (err) {
+        devLog(err);
     }
     return null;
 };
